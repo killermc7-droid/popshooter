@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 市场可行性分析报告</title>
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0a0a12;--card:rgba(255,255,255,.06);--card-solid:#15152a;
+--text:#e8e6f0;--text2:rgba(255,255,255,.6);--text3:rgba(255,255,255,.4);
+--accent:#ff2d55;--accent2:#bf5af2;--accent3:#30d158;--accent4:#ffd60a;
+--neon-pink:#ff2d78;--neon-cyan:#00f0ff;--neon-violet:#a855f7;
+--grad1:linear-gradient(135deg,#ff2d55,#bf5af2);
+--grad2:linear-gradient(135deg,#00f0ff,#3b82f6);
+--grad3:linear-gradient(135deg,#ffd60a,#ff2d55);
+--grad-dark:linear-gradient(170deg,#0a0a12 0%,#1a1035 50%,#0d1117 100%);
+--shadow:0 4px 32px rgba(0,0,0,.4);
+--shadow2:0 8px 48px rgba(0,0,0,.6);
+--radius:20px;
+--glass:rgba(255,255,255,.04);
+--border:rgba(255,255,255,.08);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;
+}
+
+/* ===== GLOBAL GLOW BG ===== */
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.35}
+.glow-orb.pink{width:600px;height:600px;background:#ff2d55;top:-200px;right:-100px}
+.glow-orb.violet{width:500px;height:500px;background:#7c3aed;bottom:10%;left:-150px}
+.glow-orb.cyan{width:400px;height:400px;background:#00f0ff;top:50%;right:20%}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);background:rgba(10,10,18,.75);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+.nav.scrolled{box-shadow:0 2px 32px rgba(255,45,85,.15)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:1.25rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .3s}
+.nav-links a:hover{color:#fff}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 32px 80px;position:relative;overflow:hidden;background:var(--grad-dark)}
+.hero::before{content:'';position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40" opacity=".03" fill="white">♪</text></svg>') repeat;background-size:80px;animation:drift 20s linear infinite;pointer-events:none}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(80px,80px)}}
+.hero-content{position:relative;z-index:2;max-width:820px}
+.hero-badge{display:inline-block;padding:8px 22px;border-radius:999px;background:rgba(255,45,85,.15);border:1px solid rgba(255,45,85,.3);color:var(--accent);font-size:.82rem;font-weight:700;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase}
+.hero h1{font-size:clamp(2.8rem,7vw,5rem);font-weight:900;line-height:1.1;margin-bottom:24px;letter-spacing:-.03em}
+.hero h1 .highlight{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .sub{display:block;font-size:clamp(1rem,2.5vw,1.4rem);font-weight:400;color:var(--text2);margin-top:12px;letter-spacing:.05em}
+.hero p{font-size:1.15rem;color:var(--text2);max-width:640px;margin:0 auto 40px;line-height:1.9}
+.hero-wow{display:inline-block;padding:16px 40px;border-radius:999px;background:var(--grad1);color:#fff;font-size:1.1rem;font-weight:800;letter-spacing:.5px;margin-bottom:32px;box-shadow:0 0 40px rgba(255,45,85,.4);position:relative;overflow:hidden}
+.hero-wow::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.hero-tags{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-tags span{padding:8px 20px;border-radius:999px;font-size:.82rem;font-weight:600;border:1px solid var(--border);background:var(--glass);color:var(--text2);backdrop-filter:blur(10px)}
+.hero-tags span:nth-child(1){border-color:rgba(255,45,85,.4);color:var(--accent)}
+.hero-tags span:nth-child(2){border-color:rgba(191,90,242,.4);color:var(--accent2)}
+.hero-tags span:nth-child(3){border-color:rgba(48,209,88,.4);color:var(--accent3)}
+.hero-tags span:nth-child(4){border-color:rgba(255,214,10,.4);color:var(--accent4)}
+
+/* ===== SECTIONS ===== */
+section{padding:100px 32px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.section-label{display:inline-block;padding:6px 18px;border-radius:999px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;border:1px solid}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:16px;line-height:1.2}
+.section-desc{font-size:1.05rem;color:var(--text2);max-width:700px;margin-bottom:56px;line-height:1.9}
+.section-divider{width:60px;height:3px;border-radius:2px;background:var(--grad1);margin-bottom:24px}
+
+/* ===== OVERVIEW CARDS ===== */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.ov-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all .4s;position:relative;overflow:hidden}
+.ov-card:hover{transform:translateY(-4px);border-color:rgba(255,45,85,.3);box-shadow:0 8px 40px rgba(255,45,85,.1)}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ov-card:nth-child(1)::before{background:var(--grad1)}
+.ov-card:nth-child(2)::before{background:var(--grad2)}
+.ov-card:nth-child(3)::before{background:linear-gradient(135deg,#30d158,#34c759)}
+.ov-card:nth-child(4)::before{background:var(--grad3)}
+.ov-card:nth-child(5)::before{background:linear-gradient(135deg,#bf5af2,#ff2d55)}
+.ov-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;background:rgba(255,255,255,.06);border:1px solid var(--border)}
+.ov-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px;color:#fff}
+.ov-card p{font-size:.9rem;color:var(--text2);line-height:1.7}
+
+/* ===== VISION BLOCKS ===== */
+.vision-block{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:80px}
+.vision-block.reverse{direction:rtl}
+.vision-block.reverse>*{direction:ltr}
+.vision-visual{aspect-ratio:1;border-radius:var(--radius);position:relative;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow2)}
+.vision-visual img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.vision-visual:hover img{transform:scale(1.05)}
+.vision-visual .label{position:absolute;bottom:16px;left:16px;padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);color:#fff;font-size:.75rem;font-weight:600}
+.vision-text h3{font-size:1.6rem;font-weight:800;margin-bottom:12px;color:#fff}
+.vision-text p{color:var(--text2);margin-bottom:16px;line-height:1.9}
+.vision-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.vision-list li{display:flex;align-items:flex-start;gap:12px;font-size:.95rem;color:var(--text2)}
+.vision-list li .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:8px}
+@media(max-width:768px){.vision-block,.vision-block.reverse{grid-template-columns:1fr;direction:ltr}.vision-block.reverse>*{direction:ltr}}
+
+/* ===== WOW POINT SECTION ===== */
+.wow-section{background:linear-gradient(170deg,#1a0520 0%,#0d0d1a 100%);border-radius:var(--radius);border:1px solid rgba(255,45,85,.2);padding:64px 48px;margin:60px 0;position:relative;overflow:hidden}
+.wow-section::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,45,85,.2),transparent 70%);pointer-events:none}
+.wow-section::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(0,240,255,.15),transparent 70%);pointer-events:none}
+.wow-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;text-align:center;margin-bottom:12px;color:#fff;position:relative;z-index:1}
+.wow-title .glow{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(255,45,85,.5)}
+.wow-subtitle{text-align:center;font-size:1.1rem;color:var(--neon-cyan);font-weight:600;margin-bottom:40px;position:relative;z-index:1}
+.wow-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;position:relative;z-index:1}
+.wow-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;transition:all .4s}
+.wow-card:hover{border-color:rgba(255,45,85,.3);background:rgba(255,45,85,.05)}
+.wow-card .num{font-size:2rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.wow-card h4{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px}
+.wow-card p{font-size:.88rem;color:var(--text2);line-height:1.7}
+@media(max-width:768px){.wow-grid{grid-template-columns:1fr}.wow-section{padding:40px 24px}}
+
+/* ===== DROP TIME VISUAL ===== */
+.drop-visual{margin:48px 0;border-radius:var(--radius);overflow:hidden;position:relative;border:1px solid rgba(255,45,85,.3);box-shadow:0 0 60px rgba(255,45,85,.15)}
+.drop-visual img{width:100%;display:block}
+.drop-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(transparent 30%,rgba(0,0,0,.7));padding:32px;text-align:center}
+.drop-overlay h3{font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:#fff;margin-bottom:8px;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.drop-overlay p{color:rgba(255,255,255,.8);font-size:.95rem;max-width:500px}
+
+/* ===== TABLE ===== */
+.data-table-wrap{overflow-x:auto;margin:32px 0;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--card-solid);font-size:.9rem}
+th{background:rgba(255,255,255,.06);font-weight:700;text-align:left;padding:16px 20px;white-space:nowrap;border-bottom:1px solid var(--border);color:#fff}
+td{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,45,85,.03)}
+
+/* ===== FLOW ===== */
+.flow-container{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin:40px 0}
+.flow-step{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px 24px;text-align:center;min-width:140px}
+.flow-step .step-num{font-size:.75rem;font-weight:700;color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
+.flow-step h4{font-size:.92rem;font-weight:700;margin-bottom:4px;color:#fff}
+.flow-step p{font-size:.78rem;color:var(--text2)}
+.flow-arrow{font-size:1.4rem;color:var(--accent2);font-weight:700}
+@media(max-width:768px){.flow-container{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+
+/* ===== PILLAR CARDS ===== */
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px 0}
+.pillar-card{border-radius:var(--radius);padding:36px 28px;color:#fff;position:relative;overflow:hidden}
+.pillar-card::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
+.pillar-card h3{font-size:1.25rem;font-weight:800;margin-bottom:10px;position:relative;z-index:1}
+.pillar-card p{font-size:.9rem;opacity:.85;line-height:1.7;position:relative;z-index:1}
+@media(max-width:768px){.pillar-grid{grid-template-columns:1fr}}
+
+/* ===== COMPARE ===== */
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin:40px 0}
+.compare-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:28px;border-left:3px solid var(--accent)}
+.compare-card h4{font-size:1.05rem;font-weight:700;margin-bottom:8px;color:#fff}
+.compare-card .ref{font-size:.82rem;color:var(--accent2);font-weight:600;margin-bottom:8px}
+.compare-card p{font-size:.88rem;color:var(--text2);line-height:1.7}
+
+/* ===== STAT ===== */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:40px 0}
+.stat-item{text-align:center;background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:28px 16px}
+.stat-num{font-size:2.4rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.85rem;color:var(--text2);margin-top:4px}
+@media(max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== PERSONA ===== */
+.persona-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:40px 0}
+.persona-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.persona-header{padding:24px 24px 16px;display:flex;align-items:center;gap:16px}
+.persona-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:rgba(255,255,255,.06);border:1px solid var(--border)}
+.persona-info h4{font-size:1.05rem;font-weight:700;color:#fff}
+.persona-info span{font-size:.82rem;color:var(--text2)}
+.persona-body{padding:0 24px 24px}
+.persona-body p{font-size:.88rem;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.persona-tags{display:flex;flex-wrap:wrap;gap:6px}
+.persona-tags span{font-size:.72rem;padding:4px 10px;border-radius:999px;background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.2);color:var(--accent2);font-weight:600}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:40px;margin:40px 0}
+.timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent2),var(--accent3))}
+.tl-item{position:relative;margin-bottom:36px}
+.tl-dot{position:absolute;left:-33px;top:4px;width:14px;height:14px;border-radius:50%;border:3px solid var(--accent);background:var(--bg)}
+.tl-item:nth-child(2) .tl-dot{border-color:var(--accent2)}
+.tl-item:nth-child(3) .tl-dot{border-color:var(--accent3)}
+.tl-item:nth-child(4) .tl-dot{border-color:var(--accent4)}
+.tl-phase{font-size:.82rem;font-weight:700;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.tl-item h4{font-size:1.05rem;font-weight:700;margin-bottom:6px;color:#fff}
+.tl-item p{font-size:.88rem;color:var(--text2);line-height:1.7}
+
+/* ===== GALLERY ===== */
+.gallery-section{margin-top:56px}
+.gallery-section h3{font-size:1.3rem;font-weight:800;margin-bottom:8px;color:#fff}
+.gallery-section .gallery-desc{font-size:.9rem;color:var(--text2);margin-bottom:24px;line-height:1.7}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gallery-item{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow2);border:1px solid var(--border);transition:all .4s;background:#000}
+.gallery-item:hover{transform:translateY(-4px);box-shadow:0 12px 48px rgba(255,45,85,.2);border-color:rgba(255,45,85,.3)}
+.gallery-item img{width:100%;height:auto;display:block;transition:transform .5s}
+.gallery-item:hover img{transform:scale(1.04)}
+.gallery-caption{position:absolute;bottom:0;left:0;right:0;padding:16px 20px;background:linear-gradient(transparent,rgba(0,0,0,.85));color:#fff}
+.gallery-caption h4{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.gallery-caption p{font-size:.75rem;opacity:.8;line-height:1.5}
+.gallery-full{grid-column:span 2}
+@media(max-width:768px){.gallery-grid{grid-template-columns:1fr}.gallery-full{grid-column:span 1}}
+
+/* ===== RESONANCE METER (wow visual) ===== */
+.resonance-demo{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:40px;margin:40px 0;text-align:center}
+.resonance-meter{width:100%;max-width:500px;height:24px;background:rgba(255,255,255,.06);border-radius:12px;margin:20px auto;overflow:hidden;position:relative}
+.resonance-fill{height:100%;width:0%;border-radius:12px;background:var(--grad1);animation:resonance-fill 3s ease-in-out infinite;position:relative}
+.resonance-fill::after{content:'DROP TIME!';position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:.7rem;font-weight:800;color:#fff;opacity:0;transition:opacity .3s}
+@keyframes resonance-fill{0%{width:0%;background:linear-gradient(90deg,#30d158,#34c759)}40%{width:60%;background:linear-gradient(90deg,#ffd60a,#ff9f0a)}70%{width:85%;background:linear-gradient(90deg,#ff6b35,#ff2d55)}85%{width:100%;background:var(--grad1)}100%{width:100%;background:var(--grad1)}}
+.resonance-labels{display:flex;justify-content:space-between;max-width:500px;margin:0 auto;font-size:.75rem;color:var(--text3)}
+
+/* ===== FOOTER ===== */
+.footer{background:linear-gradient(170deg,#1a1035,#0a0a12);color:var(--text2);padding:80px 32px;text-align:center;margin-top:80px;position:relative;z-index:1}
+.footer h3{color:#fff;font-size:1.6rem;margin-bottom:12px;font-weight:900}
+.footer p{max-width:600px;margin:0 auto;line-height:1.7;font-size:.95rem}
+.footer-copy{margin-top:40px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06);font-size:.8rem;color:var(--text3)}
+
+/* ===== ANIM ===== */
+.fade-up{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ===== ROLE CARD (角色系统) ===== */
+.role-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;margin:40px 0}
+.role-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .4s}
+.role-card:hover{transform:translateY(-6px);box-shadow:0 12px 48px rgba(0,0,0,.4)}
+.role-card .role-img{aspect-ratio:1;overflow:hidden}
+.role-card .role-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.role-card:hover .role-img img{transform:scale(1.08)}
+.role-card .role-info{padding:20px}
+.role-card .role-info h4{font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.role-card .role-info .role-pos{font-size:.78rem;font-weight:600;margin-bottom:8px}
+.role-card .role-info p{font-size:.82rem;color:var(--text2);line-height:1.6}
+@media(max-width:1024px){.role-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.role-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== PULSE ANIM ===== */
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(255,45,85,.3)}50%{box-shadow:0 0 40px rgba(255,45,85,.6)}}
+.pulse{animation:pulse-glow 2s infinite}
+
+/* ===== FACTION CARDS ===== */
+.faction-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px;margin:40px 0}
+.faction-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .4s;position:relative}
+.faction-card:hover{transform:translateY(-6px);box-shadow:0 12px 48px rgba(0,0,0,.4)}
+.faction-header{padding:28px 28px 0;position:relative}
+.faction-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.faction-header h3{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:4px}
+.faction-header .faction-sub{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.faction-header .faction-genre{font-size:.78rem;color:var(--text2);margin-bottom:12px}
+.faction-body{padding:0 28px 24px}
+.faction-body p{font-size:.88rem;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.faction-traits{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.faction-traits span{font-size:.72rem;padding:4px 12px;border-radius:999px;font-weight:600;border:1px solid}
+.faction-divider{width:100%;height:2px;margin:8px 0 16px}
+.faction-roles{display:flex;flex-direction:column;gap:8px}
+.faction-role{display:flex;align-items:flex-start;gap:10px;font-size:.84rem;color:var(--text2)}
+.faction-role .role-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.faction-role strong{color:#fff}
+@media(max-width:768px){.faction-grid{grid-template-columns:1fr}}
+
+/* ===== WORLD MAP ===== */
+.world-intro{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin:40px 0}
+.world-intro-text h3{font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:12px}
+.world-intro-text p{color:var(--text2);line-height:1.9;margin-bottom:16px;font-size:.95rem}
+.world-structure{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:32px}
+.world-structure h4{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:16px}
+.ws-item{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.ws-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;border:1px solid var(--border)}
+.ws-item .ws-text h5{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:2px}
+.ws-item .ws-text p{font-size:.82rem;color:var(--text2);line-height:1.6}
+@media(max-width:768px){.world-intro{grid-template-columns:1fr}}
+
+
+/* 独立页额外样式 */
+.page-header {
+  background:
+    radial-gradient(ellipse 120% 80% at 75% 60%, rgba(120,40,200,.18) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(0,120,255,.15) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 85% 20%, rgba(255,160,30,.1) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(0,30,80,.4) 0%, transparent 70%),
+    linear-gradient(160deg, #020510 0%, #050820 40%, #080515 100%);
+  border-bottom: 1px solid rgba(100,160,255,.2);
+  padding: 56px 32px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 15%, rgba(200,220,255,.6) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 55% 35%, rgba(255,255,255,.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 20%, rgba(180,200,255,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 40%, rgba(255,255,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 60%, rgba(200,220,255,.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 68% 55%, rgba(180,220,255,.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 80%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 75%, rgba(200,200,255,.5) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 60% 88%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 45%, rgba(180,200,255,.4) 0%, transparent 100%);
+}
+.page-header::after {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #4080ff, #a040ff, #00c8ff, transparent);
+}
+.page-header h1 {
+  font-size: 2.4rem; font-weight: 900; letter-spacing: -.02em;
+  position: relative; margin-bottom: 10px;
+}
+.page-header .sub {
+  font-size: .95rem; color: var(--text2); position: relative; margin-bottom: 6px;
+}
+.page-header .meta {
+  font-size: .82rem; color: var(--text3); position: relative;
+}
+.top-nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(5,10,20,.96); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,240,255,.1);
+  padding: 0 24px; height: 48px;
+  display: flex; align-items: center; gap: 4px; overflow-x: auto;
+}
+.top-nav .logo {
+  font-size: 12px; font-weight: 800; color: var(--neon-cyan);
+  letter-spacing: .1em; margin-right: 16px; white-space: nowrap;
+}
+.top-nav a {
+  color: var(--text2); font-size: 11px; padding: 4px 9px;
+  border-radius: 4px; transition: .15s; white-space: nowrap;
+  text-decoration: none;
+}
+.top-nav a:hover { color: #fff; background: rgba(255,255,255,.07); }
+.report-footer {
+  padding: 36px 28px; border-top: 1px solid rgba(255,255,255,.06);
+  text-align: center;
+}
+.report-footer p { font-size: .82rem; color: var(--text3); line-height: 1.9; }
+
+/* 独立页：直接显示所有内容，不依赖 IntersectionObserver */
+.fade-up { opacity: 1 !important; transform: none !important; }
+.wow-section { opacity: 1 !important; transform: none !important; }
+
+
+/* ── Case Tab 页签 ── */
+.case-tab-nav {
+  display: flex;
+  gap: 0;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  border-bottom: none;
+}
+.case-tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px 14px;
+  background: rgba(255,255,255,.03);
+  border: none;
+  border-right: 1px solid rgba(255,255,255,.06);
+  cursor: pointer;
+  transition: background .2s, border-bottom .2s;
+  position: relative;
+}
+.case-tab-btn:last-child { border-right: none; }
+.case-tab-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: transparent;
+  transition: background .2s;
+}
+.case-tab-btn:hover { background: rgba(255,255,255,.06); }
+.case-tab-btn.active { background: rgba(255,255,255,.07); }
+.case-tab-btn[data-tab="case1"].active::after { background: #30d158; }
+.case-tab-btn[data-tab="case2"].active::after { background: #00f0ff; }
+.case-tab-btn[data-tab="case3"].active::after { background: #ff2d55; }
+.case-tab-btn[data-tab="case4"].active::after { background: #e8bf40; }
+.case-tab-btn[data-tab="case5"].active::after { background: #2dd4bf; }
+.case-tab-btn[data-tab="case6"].active::after { background: #bf5af2; }
+.case-tab-num {
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+  color: rgba(255,255,255,.3); text-transform: uppercase;
+}
+.case-tab-btn.active .case-tab-num { color: rgba(255,255,255,.7); }
+.case-tab-name {
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,.6);
+  white-space: nowrap;
+}
+.case-tab-btn.active .case-tab-name { color: #fff; }
+.case-tab-tag {
+  font-size: 9.5px; font-weight: 700; padding: 2px 7px;
+  border-radius: 8px; letter-spacing: .05em;
+}
+.case-tab-content {
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+}
+.case-tab-panel .wow-section {
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+}
+@media (max-width: 700px) {
+  .case-tab-nav { flex-wrap: wrap; }
+  .case-tab-btn { flex: 0 0 50%; border-bottom: 1px solid rgba(255,255,255,.06); }
+}
+
+
+
+
+/* NMS Banner */
+.page-header {
+  background: linear-gradient(160deg, rgba(2,5,15,.72) 0%, rgba(5,8,20,.65) 40%, rgba(2,5,15,.75) 100%),
+              url("splatoon.png") !important;
+  background-size: cover !important;
+  background-position: center 35% !important;
+  background-blend-mode: normal !important;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<nav class="top-nav">
+  <div class="logo">· 市场分析</div>
+  <a href="#feasibility">市场大盘</a>
+  <a href="#positioning">品类定位</a>
+  <a href="#case-tabs-section" onclick="setTimeout(()=>switchCaseTab('case1'),50)">斯普拉遁</a>
+  <a href="#case-tabs-section" onclick="setTimeout(()=>switchCaseTab('case2'),50)">花园战争</a>
+  <a href="#case-tabs-section" onclick="setTimeout(()=>switchCaseTab('case3'),50)">守望先锋</a>
+  <a href="#case-tabs-section" onclick="setTimeout(()=>switchCaseTab('case4'),50)">Deadlock</a>
+  <a href="#case-tabs-section" onclick="setTimeout(()=>switchCaseTab('case5'),50)" style="color:#2dd4bf">超自然行动组</a>
+  <a href="#identity-v" style="color:var(--accent2)">第五人格 · 抽象文化</a>
+</nav>
+
+<!-- 页头 -->
+<div class="page-header">
+  <div class="section-label" style="background:rgba(0,240,255,.1);border-color:rgba(0,240,255,.3);color:var(--neon-cyan);display:inline-block;margin-bottom:18px">CHAPTER 01 · MARKET FEASIBILITY</div>
+  <h1>微缩大乱斗<span style="color:var(--neon-cyan)">·</span>休闲射击赛道</h1>
+  <h1 style="font-size:1.6rem;font-weight:700;margin-top:4px">市场可行性分析报告</h1>
+  <p class="sub">全球市场大盘 · 多品类先驱复盘 · 竞品验证矩阵</p>
+  <p class="meta">花园战争项目组 · 2026年4月 · 内部策略文件</p>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 24px">
+
+<!-- Chapter 01 内容主体（含 Deadlock 新增章节）-->
+<!-- ===== 01. 赛道可行性分析 ===== -->
+<section id="feasibility">
+<div class="fade-up">
+<span class="section-label" style="background:rgba(0,240,255,.1);border-color:rgba(0,240,255,.3);color:var(--neon-cyan)">CHAPTER 01 · MARKET FEASIBILITY</span>
+<h2 class="section-title">休闲射击赛道可行性 <span style="color:var(--text3);font-weight:400">Why Casual Shooters, Why Now</span></h2>
+<div class="section-divider" style="background:var(--grad2)"></div>
+<p class="section-desc">「休闲射击」这条赛道值不值得做？我们从全球市场大盘、多个品类先驱（斯普拉遁 / 花园战争 / 守望先锋 / Deadlock / 超自然行动组 / 第五人格）的生命周期复盘、竞品验证矩阵以及 Deadlock 街头乱斗快节奏模式的正向破局等维度系统论证。</p>
+</div>
+
+<!-- ===== 市场大盘 ===== -->
+<div class="wow-section fade-up" style="background:linear-gradient(170deg,#051525 0%,#0d0d1a 100%);border-color:rgba(0,240,255,.2)">
+<div class="wow-title">全球射击赛道：<span class="glow" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(0,240,255,.5)">万亿级增长中的结构性机会</span></div>
+<div class="wow-subtitle" style="color:var(--accent)">射击品类全球大盘持续扩容 · 中国市场增长空间近一倍</div>
+<div class="wow-grid">
+<div class="wow-card">
+<div class="num" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">$8,213亿</div>
+<h4>2025全球市场规模</h4>
+<p>射击游戏全球市场规模达821.3亿美元，预计2030年达1,651亿美元，CAGR 13%。腾讯高管判断：射击品类全球占比35%，中国仅20%，仍有近一倍增长空间。</p>
+</div>
+<div class="wow-card">
+<div class="num" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">18.29%</div>
+<h4>中国射击品类收入占比</h4>
+<p>2025年国内收入前100名移动游戏中，射击品类以仅7%的数量占比拿下18.29%的收入，同比提升超4个百分点。射击类为中国市场贡献超百亿增量。</p>
+</div>
+<div class="wow-card">
+<div class="num" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">品类共荣</div>
+<h4>新品上线未引发零和博弈</h4>
+<p>Embark Studios《ARC Raiders》2025年上线后，Steam头部射击游戏在线人数不降反升。市场仍在扩容期——新产品带来新玩家，而非争夺存量用户。</p>
+</div>
+<div class="wow-card">
+<div class="num" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">5,000万</div>
+<h4>三角洲行动 DAU</h4>
+<p>天美《三角洲行动》验证了中国射击市场的爆发力——DAU达5000万，登顶全球125个地区下载榜，移动版在169个地区排名第一。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== 品类定位图 ===== -->
+<div class="fade-up" id="positioning" style="margin-top:64px">
+  <span class="section-label" style="background:rgba(191,90,242,.1);border-color:rgba(191,90,242,.3);color:var(--accent2)">CHAPTER 02 · POSITIONING MAP</span>
+  <h2 class="section-title" style="margin-top:12px">射击游戏品类定位图</h2>
+  <div class="section-divider" style="background:var(--grad1)"></div>
+  <p class="section-desc" style="margin-bottom:28px">X轴：硬核度（左硬核 → 右休闲）&nbsp;|&nbsp;Y轴：女性玩家占比&nbsp;|&nbsp;气泡大小：市场规模/影响力</p>
+  <div style="position:relative;width:100%;overflow-x:auto">
+    <svg id="positioning-chart" style="display:block;width:100%;max-width:1400px;height:900px;margin:0 auto"></svg>
+    <div id="chart-tooltip" style="position:absolute;pointer-events:none;background:rgba(10,10,20,.92);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:10px 14px;font-size:12px;color:#e8e6f0;line-height:1.6;max-width:200px;display:none;z-index:10;backdrop-filter:blur(10px)"></div>
+  </div>
+</div>
+
+<!-- ===== 四大案例 Tab 页签 ===== -->
+<div class="fade-up" id="case-tabs-section" style="margin-top:48px">
+
+<!-- Tab 导航 -->
+<div class="case-tab-nav" id="caseTabNav">
+  <button class="case-tab-btn active" data-tab="case1" onclick="switchCaseTab('case1')">
+    <span class="case-tab-num">CASE 1</span>
+    <span class="case-tab-name">斯普拉遁系列</span>
+    <span class="case-tab-tag" style="background:rgba(48,209,88,.15);color:#30d158">天花板验证</span>
+  </button>
+  <button class="case-tab-btn" data-tab="case2" onclick="switchCaseTab('case2')">
+    <span class="case-tab-num">CASE 2</span>
+    <span class="case-tab-name">花园战争系列</span>
+    <span class="case-tab-tag" style="background:rgba(0,240,255,.12);color:#00f0ff">普适性验证</span>
+  </button>
+  <button class="case-tab-btn" data-tab="case3" onclick="switchCaseTab('case3')">
+    <span class="case-tab-num">CASE 3</span>
+    <span class="case-tab-name">守望先锋系列</span>
+    <span class="case-tab-tag" style="background:rgba(255,45,85,.12);color:#ff2d55">需求验证</span>
+  </button>
+  <button class="case-tab-btn" data-tab="case4" onclick="switchCaseTab('case4')">
+    <span class="case-tab-num">CASE 4</span>
+    <span class="case-tab-name">Deadlock 街头乱斗</span>
+    <span class="case-tab-tag" style="background:rgba(201,162,39,.15);color:#e8bf40">模式拆分验证</span>
+  </button>
+  <button class="case-tab-btn" data-tab="case5" onclick="switchCaseTab('case5')">
+    <span class="case-tab-num">CASE 5</span>
+    <span class="case-tab-name">超自然行动组</span>
+    <span class="case-tab-tag" style="background:rgba(45,212,191,.15);color:#2dd4bf">国产商业验证</span>
+  </button>
+  <button class="case-tab-btn" data-tab="case6" onclick="switchCaseTab('case6')">
+    <span class="case-tab-num">CASE 6</span>
+    <span class="case-tab-name">第五人格</span>
+    <span class="case-tab-tag" style="background:rgba(191,90,242,.15);color:#bf5af2">长线运营验证</span>
+  </button>
+
+</div>
+
+<!-- Tab 内容区 -->
+<div class="case-tab-content">
+
+  <!-- CASE 1 -->
+  <div class="case-tab-panel active" id="panel-case1">
+    <div class="wow-section" style="background:
+    radial-gradient(circle 200px at 85% 15%, rgba(100,255,100,.18) 0%, transparent 70%),
+    radial-gradient(circle 150px at 15% 75%, rgba(0,220,120,.12) 0%, transparent 60%),
+    radial-gradient(circle 100px at 60% 85%, rgba(48,209,88,.15) 0%, transparent 55%),
+    radial-gradient(circle 80px at 40% 20%, rgba(150,255,150,.1) 0%, transparent 50%),
+    linear-gradient(170deg,#0e2010 0%,#081508 100%);
+  border-color:rgba(48,209,88,.35);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+      
+<div class="wow-title" style="font-size:1.5rem">
+<span style="color:var(--accent3)">CASE 1</span> ·
+Splatoon 系列：<span class="glow" style="background:linear-gradient(135deg,#30d158,#00f0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">休闲射击品类的天花板</span>
+
+<div class="wow-subtitle" style="color:var(--accent3)">任天堂独占</div> · 三代累计3000万+ · 日本国民级射击IP</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:32px 0">
+<div style="background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.8rem;font-weight:900;color:var(--accent3)">495万</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">Splatoon 1 · Wii U<br>2015 · Wii U最畅销</div>
+</div>
+<div style="background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.8rem;font-weight:900;color:var(--accent3)">1,330万</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">Splatoon 2 · Switch<br>2017 · Switch第四畅销</div>
+</div>
+<div style="background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.8rem;font-weight:900;color:var(--accent3)">1,245万+</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">Splatoon 3 · Switch<br>2022 · 日本首发3天345万</div>
+</div>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+<h4 style="color:var(--accent3);font-size:1.05rem;font-weight:700;margin-bottom:12px">品类论证价值</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">1. 平台独占仍破3000万</strong>——Splatoon仅在任天堂主机发行，从未登陆PC/PlayStation/Xbox/手机。在如此受限的发行条件下，系列仍达3070万+累计销量，说明<strong style="color:var(--accent3)">休闲射击的底层需求远超平台限制</strong>。若Splatoon模式全平台发行，市场体量至少翻3-5倍。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">2. 创造了「非暴力射击」品类</strong>——用「涂地盘」替代「杀人头」，将射击游戏的核心目标从消灭敌人转为领地占领。这一设计使射击品类的核心乐趣（空间控制 + 精准操作）得以保留，同时彻底消除暴力标签。
+</p>
+</div>
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">3. 女性玩家占比35-45%</strong>——远超硬核射击的10-16%。Splatoon通过鲜明的时尚元素、角色自定义（发型/服装/鞋子）和「祭典」投票等社交系统，让女性玩家找到了射击之外的情感连接。这证明<strong style="color:var(--accent3)">降低暴力感 ≠ 降低乐趣，反而打开了2-3倍的用户基数</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">4. 日本国民级IP影响力</strong>——Splatoon 3首发3天日本345万份，打破了包括宝可梦在内的日本游戏首发纪录。这证明休闲射击不仅是「小众品类的大众化尝试」，而是有潜力成为<strong style="color:var(--accent3)">国民级别的文化现象</strong>。
+</p>
+</div>
+</div>
+<div style="background:rgba(48,209,88,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+<p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:var(--accent3)">对微缩大乱斗的启示：</strong>Splatoon验证了休闲射击品类的天花板极高，但也留下了一个巨大的市场空白——<strong style="color:#fff">它从未登陆任天堂以外的任何平台</strong>。PC、PlayStation、Xbox、手机端合计数十亿设备的用户，至今没有一款同等品质的休闲射击产品可玩。微缩大乱斗作为全平台休闲射击，直接面对的是这个被Splatoon验证过但从未被填满的需求池。</p>
+</div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- CASE 2 -->
+  <div class="case-tab-panel" id="panel-case2" style="display:none">
+    <div class="wow-section" style="background:
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(0,240,255,.12) 0%, transparent 50%),
+    radial-gradient(circle 180px at 80% 80%, rgba(80,180,60,.18) 0%, transparent 60%),
+    radial-gradient(circle 120px at 20% 30%, rgba(255,200,60,.1) 0%, transparent 55%),
+    radial-gradient(circle 200px at 10% 90%, rgba(0,180,80,.12) 0%, transparent 65%),
+    linear-gradient(170deg,#0f1e10 0%,#0a100a 60%,#0d0d1a 100%);
+  border-color:rgba(0,240,255,.3);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+      
+<div class="wow-title" style="font-size:1.5rem">
+<span style="color:var(--neon-cyan)">CASE 2</span> ·
+花园战争系列：<span class="glow" style="background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">第三方IP的品类普适性验证</span>
+
+<div class="wow-subtitle" style="color:var(--neon-cyan)">EA / PopCap · 三代作品（2014-2019）· 多平台发行 · Metacritic 均分76-80</div></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:32px 0">
+<div style="background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.4rem;font-weight:900;color:var(--neon-cyan)">花园战争 1</div>
+<div style="font-size:.82rem;color:var(--text2);margin-top:4px">2014 · MC 76-80 <br>寒霜3引擎 · Xbox→全平台</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">首创PvZ射击化</div>
+</div>
+<div style="background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.4rem;font-weight:900;color:var(--neon-cyan)">花园战争 2</div>
+<div style="font-size:.82rem;color:var(--text2);margin-top:4px">2016 · MC 77-80<br>加入单人/合作PvE内容</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">品类扩展期</div>
+</div>
+<div style="background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.15);border-radius:12px;padding:20px;text-align:center">
+<div style="font-size:1.4rem;font-weight:900;color:var(--neon-cyan)">邻里之战 BFN</div>
+<div style="font-size:.82rem;color:var(--text2);margin-top:4px">2019 · MC 72-76<br>开放世界探索 · 系列终章</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">运营过早终止</div>
+</div>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+<h4 style="color:var(--neon-cyan);font-size:1.05rem;font-weight:700;margin-bottom:12px">品类论证价值</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">1. 非任天堂IP也能做成休闲射击</strong>——Splatoon的成功常被归因于「任天堂魔法」，但花园战争用EA的寒霜引擎 + PopCap的植物大战僵尸IP，在PC/PS/Xbox上复现了同样的品类吸引力。三代产品Metacritic均分稳定在76-80，证明<strong style="color:var(--neon-cyan)">休闲射击的成功因素是品类结构性的，不是某家公司独有的</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">2. 「IP去暴力化 + 射击」的公式可复制</strong>——花园战争将PvZ的卡通植物/僵尸IP与TPS射击结合，用豌豆射手发射子弹、用仙人掌当狙击手——武器和战斗的「暴力感」被IP幽默感完全消解。核心公式：<strong style="color:var(--neon-cyan)">情绪价值 &gt; 竞技压力</strong>。
+</p>
+</div>
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">3. 被低估的系列——非品类问题，而是运营问题</strong>——BFN发行后仅6个月EA就停止了内容更新，导致生命周期被人为截断。但系列粉丝社区至今活跃，Steam评价「多半好评」，Reddit社区经常请愿新作。<strong style="color:var(--neon-cyan)">品类需求从未消失，只是供给方主动退出了</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">4. 多平台验证了用户获取可行性</strong>——花园战争系列在PC/PS/Xbox三平台发行，且加入EA Play订阅库。相比Splatoon的Switch独占，花园战争验证了<strong style="color:var(--neon-cyan)">休闲射击在PC/主机全平台上的用户获取和留存能力</strong>，为微缩大乱斗的全平台发行提供了直接的先例参考。
+</p>
+</div>
+</div>
+<div style="background:rgba(0,240,255,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+<p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:var(--neon-cyan)">对微缩大乱斗的启示：</strong>花园战争证明了两件事——第一，休闲射击不是任天堂的专利，任何有辨识度IP的团队都能切入；第二，<strong style="color:#fff">这个品类最大的风险不是「用户不买账」，而是「厂商不长线运营」</strong>。EA对花园战争系列的过早放弃，本质上是对休闲射击品类价值的误判。微缩大乱斗需要在立项时就承诺「Games as a Service」的长线运营策略。</p>
+</div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- CASE 3 -->
+  <div class="case-tab-panel" id="panel-case3" style="display:none">
+    <div class="wow-section" style="background:
+    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(255,130,0,.2) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 15% 70%, rgba(0,160,255,.18) 0%, transparent 50%),
+    radial-gradient(circle 120px at 90% 80%, rgba(255,80,0,.12) 0%, transparent 50%),
+    radial-gradient(circle 100px at 30% 15%, rgba(80,200,255,.12) 0%, transparent 45%),
+    linear-gradient(160deg,#1a0c25 0%,#0d0d1a 50%,#0a1525 100%);
+  border-color:rgba(255,100,30,.3);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+      
+<div class="wow-title" style="font-size:1.5rem">
+<span style="color:var(--accent2)">CASE 3</span> ·
+守望先锋系列：<span class="glow" style="background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">竞技射击「向下兼容」的极限与教训</span>
+
+<div class="wow-subtitle" style="color:var(--accent2)">暴雪 · 全球5000万+玩家 · 英雄射击品类定义者 · 从Buy-to-Play到F2P的转型实验</div></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin:32px 0">
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.15);border-radius:12px;padding:16px;text-align:center">
+<div style="font-size:1.5rem;font-weight:900;color:var(--accent2)">5,000万+</div>
+<div style="font-size:.75rem;color:var(--text3);margin-top:4px">OW1 累计玩家</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.15);border-radius:12px;padding:16px;text-align:center">
+<div style="font-size:1.5rem;font-weight:900;color:var(--accent2)">3,500万</div>
+<div style="font-size:.75rem;color:var(--text3);margin-top:4px">OW2 首月玩家</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.15);border-radius:12px;padding:16px;text-align:center">
+<div style="font-size:1.5rem;font-weight:900;color:var(--accent2)">16%</div>
+<div style="font-size:.75rem;color:var(--text3);margin-top:4px">女性玩家占比</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.15);border-radius:12px;padding:16px;text-align:center">
+<div style="font-size:1.5rem;font-weight:900;color:var(--accent2)">2,370万</div>
+<div style="font-size:.75rem;color:var(--text3);margin-top:4px">2024 MAU</div>
+</div>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+<h4 style="color:var(--accent2);font-size:1.05rem;font-weight:700;margin-bottom:12px">品类论证价值：「竞技射击为什么需要休闲化」</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">1. 守望先锋的「休闲化意图」从未成功</strong>——OW初代的设计初衷是「让射击游戏对更多人开放」——丰富的角色个性、辅助/坦克定位降低纯枪法门槛、快节奏快反馈。这一策略在<strong style="color:var(--accent2)">获客阶段极度成功</strong>（首月700万→一年2000万→累计5000万+），但竞技排位系统和电竞联赛的方向选择使OW逐渐<strong style="color:var(--accent)">向硬核端漂移</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">2. 硬核化导致增量用户被拒之门外</strong>——女性玩家仅占16%（远低于休闲射击35-45%的水平），说明OW的角色多样性无法抵消竞技压力对非硬核用户的排斥。快速匹配模式（Quick Play）本是休闲入口，但由于缺乏独立的进阶系统和内容供给，沦为排位的「热身房」而非独立的休闲体验。
+</p>
+</div>
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">3. OW2的F2P转型暴露了品类定位的矛盾</strong>——OW2转免费后首月3500万玩家涌入，但2024年MAU稳定在2370万——<strong style="color:var(--accent2)">留存率不足70%</strong>。同期Marvel Rivals以IP差异化快速分流（Steam峰值66万），FragPunk以机制创新尝试突围（Steam峰值10万）。英雄射击赛道已进入<strong style="color:var(--accent)">红海内卷期</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">4. 启示：射击品类的「休闲化需求」是真实的，但不能靠硬核产品向下兼容来满足</strong>——OW试图用角色设计降低门槛，但竞技系统决定了产品的基因。Valorant女性玩家反而高达30-40%（角色能力 + 不以TTK为核心），说明<strong style="color:var(--accent2)">「真正的休闲射击」需要从立项之初就以休闲为核心设计目标</strong>，而非在硬核产品上打补丁。
+</p>
+</div>
+</div>
+<div style="background:rgba(191,90,242,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+<p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:var(--accent2)">对微缩大乱斗的启示：</strong>守望先锋用8年时间证明了一个关键结论——<strong style="color:#fff">射击品类中存在巨大的休闲化需求，但这个需求无法被「竞技产品+休闲模式」满足</strong>。OW积累的5000万+玩家中，大量因竞技压力流失的「休闲向射击爱好者」正是微缩大乱斗的目标用户。微缩大乱斗不需要与OW2/Marvel Rivals在英雄射击赛道正面竞争——它要做的是接住那些被硬核化推出去的用户。</p>
+</div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- CASE 4 -->
+  <div class="case-tab-panel" id="panel-case4" style="display:none">
+    <div class="wow-section" style="background:
+    radial-gradient(ellipse 80% 60% at 75% 25%, rgba(180,120,20,.2) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 70%, rgba(120,80,20,.15) 0%, transparent 50%),
+    radial-gradient(circle 160px at 85% 80%, rgba(200,140,30,.12) 0%, transparent 55%),
+    radial-gradient(circle 100px at 10% 20%, rgba(100,60,10,.2) 0%, transparent 50%),
+    radial-gradient(circle 300px at 50% 50%, rgba(30,20,5,.5) 0%, transparent 70%),
+    linear-gradient(170deg,#0d0e08 0%,#080a05 50%,#0a0c10 100%);
+  border-color:rgba(201,162,39,.35);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+      
+<div class="wow-title" style="font-size:1.5rem">
+  <span style="color:#e8bf40">CASE 4</span> ·
+  Deadlock 街头乱斗：<span class="glow" style="background:linear-gradient(135deg,#c9a227,#e8bf40);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(201,162,39,.5)">硬核到休闲的模式拆分验证</span>
+
+<div class="wow-subtitle" style="color:#e8bf40">Valve · 2026年1月「旧神·新血」更新 · 历史峰值17万→流失84%→街头乱斗模式正面破局</div></div>
+
+<!-- 关键数据 -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:32px 0">
+  <div style="background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.18);border-radius:12px;padding:18px;text-align:center">
+    <div style="font-size:1.7rem;font-weight:900;color:#e8bf40">17万</div>
+    <div style="font-size:.78rem;color:var(--text3);margin-top:4px">2024年9月<br>历史峰值在线</div>
+  </div>
+  <div style="background:rgba(224,82,82,.08);border:1px solid rgba(224,82,82,.18);border-radius:12px;padding:18px;text-align:center">
+    <div style="font-size:1.7rem;font-weight:900;color:#ff7070">84%</div>
+    <div style="font-size:.78rem;color:var(--text3);margin-top:4px">流失率<br>峰值→约1万</div>
+  </div>
+  <div style="background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.18);border-radius:12px;padding:18px;text-align:center">
+    <div style="font-size:1.7rem;font-weight:900;color:#3fb950">BO5</div>
+    <div style="font-size:.78rem;color:var(--text3);margin-top:4px">五局三胜赛制<br>单局15~25分钟</div>
+  </div>
+</div>
+
+<!-- 模式对比 -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:28px 0">
+  <div style="background:rgba(224,82,82,.06);border:1px solid rgba(224,82,82,.2);border-radius:12px;padding:20px">
+    <h4 style="color:#ff7070;font-size:.95rem;font-weight:700;margin-bottom:12px">标准模式痛点（为何流失84%）</h4>
+    <p style="font-size:.85rem;color:var(--text2);line-height:1.9">
+      • <strong style="color:#fff">6V6 单局35~50分钟</strong>——无法暂停，碎片化时代劝退成年核心玩家<br>
+      • <strong style="color:#fff">700+件物品×6条知识线</strong>——新手「知识债」极重，前5局无法理解为何输<br>
+      • <strong style="color:#fff">匹配机制长期失准</strong>——65%新玩家帖子提及严重匹配地狱<br>
+      • <strong style="color:#fff">运动系统天花板过高</strong>——低手局无枪战，高手局全杂技，体验完全割裂<br>
+      • <strong style="color:#fff">EA信任危机</strong>——地图从4线改3线等大幅改动令老玩家产生背叛感
+    </p>
+  </div>
+  <div style="background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.2);border-radius:12px;padding:20px">
+    <h4 style="color:#3fb950;font-size:.95rem;font-weight:700;margin-bottom:12px">街头乱斗破局（如何正面回应）</h4>
+    <p style="font-size:.85rem;color:var(--text2);line-height:1.9">
+      • <strong style="color:#fff">4V4 BO5 每局15~25分钟</strong>——短局解决时间问题，五局三胜提供赛事感<br>
+      • <strong style="color:#fff">彻底移除经济系统</strong>——无需学装备购买，开局获得随机装备直接开打<br>
+      • <strong style="color:#fff">镜像平衡机制</strong>——双方同等级装备同步掉落，高随机性下维护绝对公平<br>
+      • <strong style="color:#fff">技能开局即就绪</strong>——无冷启动体验，30秒内进入高密度团战<br>
+      • <strong style="color:#fff">17件传说专属装备</strong>——魔法钢琴天降/自爆合剂等高亮时刻天然成短视频素材
+    </p>
+  </div>
+</div>
+
+<!-- 17件传说装备简表 -->
+<div style="margin:24px 0">
+  <h4 style="color:#e8bf40;font-size:1rem;font-weight:700;margin-bottom:14px">17件街头乱斗传说专属装备（节选核心）</h4>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <div style="background:rgba(232,144,42,.08);border:1px solid rgba(232,144,42,.2);border-radius:8px;padding:12px 14px">
+      <div style="font-size:.78rem;font-weight:700;color:#e8902a;margin-bottom:4px">武器类 · 3件</div>
+      <div style="font-size:.82rem;color:var(--text2);line-height:1.8">摄魂射击 / 无限弹药 / 符文护手</div>
+    </div>
+    <div style="background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:8px;padding:12px 14px">
+      <div style="font-size:.78rem;font-weight:700;color:#3fb950;margin-bottom:4px">活力类 · 7件</div>
+      <div style="font-size:.82rem;color:var(--text2);line-height:1.8">天赐祝福 / 机遇之斗篷 / 电力拖鞋<br>永恒之礼 / 无效爆发 / 炽天使之翼 / 暗影打击</div>
+    </div>
+    <div style="background:rgba(155,111,212,.08);border:1px solid rgba(155,111,212,.2);border-radius:8px;padding:12px 14px">
+      <div style="font-size:.78rem;font-weight:700;color:#9b6fd4;margin-bottom:4px">精神类 · 7件</div>
+      <div style="font-size:.82rem;color:var(--text2);line-height:1.8">霜冻护符 / 神秘导管 / 魔法钢琴<br>全能充能印记 / 棱镜爆发 / 缩小射线 / 不稳定合剂</div>
+    </div>
+  </div>
+</div>
+
+<!-- 论证价值 -->
+<div style="max-width:900px;margin:20px auto 0">
+  <h4 style="color:#e8bf40;font-size:1.05rem;font-weight:700;margin-bottom:12px">品类论证价值</h4>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div>
+      <p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+        <strong style="color:#fff">1. 验证了「无运营门槛」的可行性</strong>——街头乱斗彻底移除经济系统后，玩家反馈转为正向，首周上线即成为更新中评价最高的内容。证明<strong style="color:#e8bf40">降低上手门槛 ≠ 降低游戏深度，反而扩大了可及人群</strong>。
+      </p>
+      <p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+        <strong style="color:#fff">2. 验证了「受控随机」装备机制</strong>——3组3件选1+重随+镜像平衡，高随机性下维护绝对公平，制造了「我有他也有，怎么赢？」的策略博弈感，显著提升内容深度与复玩价值。
+      </p>
+    </div>
+    <div>
+      <p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+        <strong style="color:#fff">3. 验证了「传说装备=短视频内容引擎」</strong>——魔法钢琴天降、不稳定合剂自爆等非常规效果天然成为短视频片段素材，形成低成本UGC传播飞轮，B站相关视频首周播放量超数万次。
+      </p>
+      <p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+        <strong style="color:#fff">4. 揭示了硬核游戏流失玩家的真实需求</strong>——Deadlock 84%的流失玩家并非不喜欢Deadlock，而是被上手门槛和单局时长劝退。这批用户（约14万峰值流失）正是「想玩有深度的多人射击，但不想花200小时学习」的群体——也是微缩大乱斗精准的目标用户。
+      </p>
+    </div>
+  </div>
+  <div style="background:rgba(201,162,39,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+    <p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:#e8bf40">对微缩大乱斗的启示：</strong>Deadlock 街头乱斗以「无经济门槛 × 受控随机装备 × BO5赛制 × 传说装备UGC引擎」四个设计决策，在三周内将一款硬核游戏的休闲玩家留存率大幅拉升。微缩大乱斗应将这四个决策全部作为<strong style="color:#fff">核心玩法框架的标准配置</strong>，并在此基础上叠加「音乐学院IP × 七大阵营世界观 × 全平台」三重差异化壁垒，构建Deadlock无法复制的护城河。</p>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- CASE 5 -->
+  <div class="case-tab-panel" id="panel-case5" style="display:none">
+    <div class="wow-section" style="background:
+    radial-gradient(ellipse 75% 55% at 80% 18%, rgba(45,212,191,.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 16% 75%, rgba(20,184,166,.14) 0%, transparent 50%),
+    radial-gradient(circle 140px at 88% 82%, rgba(0,200,160,.12) 0%, transparent 55%),
+    linear-gradient(170deg,#06201c 0%,#0a1512 50%,#0a0d14 100%);
+  border-color:rgba(45,212,191,.35);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+
+<div class="wow-title" style="font-size:1.5rem">
+<span style="color:#2dd4bf">CASE 5</span> ·
+超自然行动组：<span class="glow" style="background:linear-gradient(135deg,#2dd4bf,#00f0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">国产卡通休闲射击的商业化验证</span>
+
+<div class="wow-subtitle" style="color:#2dd4bf">巨人网络 · 2025年1月上线 · 约15个月累计收入破50亿 · DAU破1000万（A股唯一单款日活过千万）</div></div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:32px 0">
+<div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:#2dd4bf">50亿+</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">累计收入<br>上线约15个月</div>
+</div>
+<div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:#2dd4bf">1,000万</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">DAU（2026.2）<br>A股唯一单款日活过千万</div>
+</div>
+<div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:#2dd4bf">畅销榜 第4</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">iOS 最高排名<br>2025.8 运营高峰</div>
+</div>
+<div style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:#2dd4bf">100万+</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">同时在线峰值<br>2025.7</div>
+</div>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+<h4 style="color:#2dd4bf;font-size:1.05rem;font-weight:700;margin-bottom:12px">品类论证价值</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">1. 「卡通 Q 版 + 多人组队 + 探索 / 解谜协作」= 休闲玩家友好型</strong>——其玩法核心是多人探索与解谜协作（<strong style="color:#fff">并非射击</strong>），上手门槛极低，被市场普遍评价为「休闲玩家友好型」。一款国产新品在约一年内做到千万级 DAU，<strong style="color:#2dd4bf">直接验证了国内市场对「卡通 Q 版多人休闲」品类真实且巨大的需求</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">2. 长线内容运营稳住流水</strong>——「昆仑秘境」等地图版本持续更新，淡季流水仍稳在 5 亿级。这正面印证了花园战争一章的反向教训——<strong style="color:#2dd4bf">卡通休闲多人靠 Games as a Service 长线供给即可维持高位</strong>。
+</p>
+</div>
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">3. 美术 / 视角方向已被市场验证</strong>——其 3D Q 版卡通、角色屏占比大、可爱辨识度高的表现，正是微缩大乱斗 3C 白皮书明确的「参考《超自然行动组》角色屏占比」方向。<strong style="color:#2dd4bf">本项目的美术与越肩近景定位，已有一个千万 DAU 级的成功样本背书</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">4. 高天花板，但热度需内容续航</strong>——2025 年 9 月曾出现约 16% 的环比下滑（竞品分流等）。说明卡通休闲多人赛道用户天花板极高，但<strong style="color:#2dd4bf">必须靠稳定的内容供给与版本节奏维持热度</strong>，与本案「英雄≈1/月、关卡≈1/季」的产能规划相互印证。
+</p>
+</div>
+</div>
+<div style="background:rgba(45,212,191,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+<p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:#2dd4bf">对微缩大乱斗的启示：</strong>超自然行动组是离微缩大乱斗最近的国产成功样本——同为卡通 Q 版、主打多人欢乐、休闲友好，并已用「50 亿收入 + 千万 DAU」证明国内市场愿意为这类产品买单。它一方面为本项目的美术与视角方向背书，另一方面也提示：<strong style="color:#fff">长线内容运营与版本节奏，才是这条赛道真正的生命线</strong>。</p>
+</div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- CASE 6 -->
+  <div class="case-tab-panel" id="panel-case6" style="display:none">
+    <div class="wow-section" style="background:
+    radial-gradient(ellipse 72% 55% at 80% 18%, rgba(191,90,242,.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 16% 75%, rgba(255,45,120,.13) 0%, transparent 50%),
+    radial-gradient(circle 140px at 88% 82%, rgba(168,85,247,.12) 0%, transparent 55%),
+    linear-gradient(170deg,#1a0a25 0%,#0d0d1a 55%,#15081a 100%);
+  border-color:rgba(191,90,242,.35);margin-top:0;border-top:none;border-radius:0 0 16px 16px">
+
+<div class="wow-title" style="font-size:1.5rem">
+<span style="color:var(--accent2)">CASE 6</span> ·
+第五人格：<span class="glow" style="background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">长线运营 × 用户文化驱动的成功样本</span>
+
+<div class="wow-subtitle" style="color:var(--accent2)">网易 · 2018年上线 · 非对称竞技 · 注册用户破亿 · 六年后靠「抽象文化」二次翻红</div></div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:32px 0">
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:var(--accent2)">破亿</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">注册用户<br>长线高黏性 IP</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:var(--accent2)">2018</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">上线年份<br>非对称竞技稀缺期</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:var(--accent2)">50 → 10</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">iOS 畅销榜翻红<br>2023.7 转折点</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.18);border-radius:12px;padding:18px;text-align:center">
+<div style="font-size:1.7rem;font-weight:900;color:var(--accent2)">6年</div>
+<div style="font-size:.78rem;color:var(--text3);margin-top:4px">长线运营<br>玩家文化自发沉淀</div>
+</div>
+</div>
+
+<div style="max-width:900px;margin:0 auto">
+<h4 style="color:var(--accent2);font-size:1.05rem;font-weight:700;margin-bottom:12px">成功要素拆解（商业角度）</h4>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">1. 长线运营的典范</strong>——上线六年仍能凭借玩家文化二次翻红、重回 iOS 畅销榜前 10。证明对抗类游戏的生命周期可以<strong style="color:var(--accent2)">远超传统认知，关键在于持续的内容与情绪供给</strong>。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">2. 用户文化即护城河</strong>——翻红几乎零买量痕迹，靠的是「抽象/发癫」圈层默契与玩法级 meme 自发传播拉新。<strong style="color:var(--accent2)">把游戏做成情绪宣泄阵地，比投放更持久</strong>。
+</p>
+</div>
+<div>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9">
+<strong style="color:#fff">3. 双向承接、稳住大盘</strong>——一面用亚文化 IP 联动巩固圈层，一面用美型内容承接大众审美；同时持续降低新手门槛，把热度沉淀为留存。
+</p>
+<p style="font-size:.88rem;color:var(--text2);line-height:1.9;margin-top:12px">
+<strong style="color:#fff">4. 对抗类玩法天然适配造梗</strong>——高心跳反馈 + 高光/翻车时刻，是抽象文化与短视频二创的温床——这一适配性<strong style="color:var(--accent2)">对休闲射击同样成立</strong>。
+</p>
+</div>
+</div>
+<div style="background:rgba(191,90,242,.1);border-radius:10px;padding:16px 20px;margin-top:20px">
+<p style="font-size:.85rem;color:var(--text2);line-height:1.8"><strong style="color:var(--accent2)">对微缩大乱斗的启示：</strong>第五人格证明——一款对抗类游戏能靠「用户文化」而非「运营投放」实现长线翻红。其完整方法论（高反馈玩法催生情绪宣泄 → 玩法级 meme 自发拉新 → 圈层默契沉淀为社区阵地 → 亚文化与大众审美双向承接）与休闲射击高度兼容。<strong style="color:#fff">完整的群体画像与可行性拆解详见下方 CHAPTER 03 ·《第五人格》抽象文化阵地分析。</strong></p>
+</div>
+</div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- ===== CHAPTER 03 · 非对称对抗社交群体 × 休闲射击结合可行性 ===== -->
+<section id="identity-v" style="padding-top:80px">
+<div class="fade-up">
+<span class="section-label" style="background:rgba(191,90,242,.12);border-color:rgba(191,90,242,.35);color:var(--accent2)">CHAPTER 03 · ASYMMETRIC SOCIAL × CASUAL SHOOTER</span>
+<h2 class="section-title" style="margin-top:12px">非对称对抗社交群体 × 休闲射击结合可行性 <span style="color:var(--text3);font-weight:400;font-size:.55em;display:block;margin-top:6px">以《第五人格》「抽象文化阵地」为镜：情绪宣泄群体如何被一款射击游戏接住</span></h2>
+<div class="section-divider" style="background:var(--grad1)"></div>
+<p class="section-desc">前两章论证了「休闲射击」的赛道价值与目标用户从何而来。本章换一个视角——不看运营策略，而看<strong style="color:#fff">用户文化</strong>：以《第五人格》六年后凭借「抽象文化」二次翻红为样本，拆解一个被严重低估的高黏性群体——<strong style="color:var(--accent2)">非对称对抗社交 × 玩抽象/发癫</strong>群体，并论证休闲射击与这一群体结合的可行性。</p>
+</div>
+
+<!-- 数据复盘 -->
+<div class="wow-section fade-up" style="background:
+radial-gradient(ellipse 70% 55% at 80% 15%, rgba(191,90,242,.18) 0%, transparent 55%),
+radial-gradient(ellipse 55% 45% at 15% 75%, rgba(255,45,120,.14) 0%, transparent 50%),
+radial-gradient(circle 120px at 90% 85%, rgba(168,85,247,.12) 0%, transparent 50%),
+linear-gradient(170deg,#1a0a25 0%,#0d0d1a 55%,#15081a 100%);
+border-color:rgba(191,90,242,.3)">
+<div class="wow-title" style="font-size:1.5rem">数据复盘：<span class="glow" style="background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(191,90,242,.5)">六年老游戏的「一夜翻红」</span>
+<div class="wow-subtitle" style="color:var(--accent2)">以 2023 年 7 月为界 · iOS 畅销榜从 50 名外回升至前 10 名（数据来源：七麦数据）</div></div>
+
+<div class="stat-row" style="margin:32px 0 8px">
+<div class="stat-item" style="background:rgba(191,90,242,.06);border-color:rgba(191,90,242,.2)">
+<div class="stat-num">2018</div>
+<div class="stat-label">上线年份<br>非对称竞技手游稀缺期</div>
+</div>
+<div class="stat-item" style="background:rgba(191,90,242,.06);border-color:rgba(191,90,242,.2)">
+<div class="stat-num">50 → 10</div>
+<div class="stat-label">iOS 畅销榜名次<br>不温不火 → 头部回归</div>
+</div>
+<div class="stat-item" style="background:rgba(191,90,242,.06);border-color:rgba(191,90,242,.2)">
+<div class="stat-num">2023.7</div>
+<div class="stat-label">转折点<br>「我服了爸爸」同人漫画出圈</div>
+</div>
+<div class="stat-item" style="background:rgba(191,90,242,.06);border-color:rgba(191,90,242,.2)">
+<div class="stat-num">6 年</div>
+<div class="stat-label">沉淀周期<br>核心玩家自发凝结出独特氛围</div>
+</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border-radius:10px;padding:16px 20px;margin-top:24px;max-width:920px;margin-left:auto;margin-right:auto">
+<p style="font-size:.86rem;color:var(--text2);line-height:1.85">2018 年凭借精致美术与稀缺的非对称竞技玩法获得高关注，但因玩法不平衡、挫败感强，长期不温不火。正是这段时间，<strong style="color:#fff">留存下来的核心玩家自发凝结出「发癫 + 玩抽象」的独特氛围</strong>。2023 年 7 月，一段玩家自制同人短漫在触漫走红（「wflbb 我服了爸爸」「卢关」梗的来源），新玩家涌入后发现老玩家同样抽象有趣，数据由此持续回暖。<strong style="color:var(--accent2)">翻红的本质不是运营动作，而是一座「圈层文化阵地」成型了。</strong></p>
+</div>
+</div>
+
+<!-- 抽象文化是什么 -->
+<div class="fade-up" style="margin-top:64px">
+<h3 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px">一、先看清这个群体：什么是「抽象文化」？</h3>
+<p style="color:var(--text2);line-height:1.85;font-size:.95rem;max-width:920px;margin-bottom:28px">抽象文化已近乎成为中文互联网最重要的情绪宣泄内容形式。它诞生于 2015 年直播热潮，以无逻辑却疯癫整活的方式在主播与网友的二次创作中发酵，逐渐成为一套「反高雅」的互联网亚文化。不同于福瑞、地偶等具有外显标识的圈层，玩抽象的群体隐匿在互联网世界中难以识别，但其广泛性远超想象。</p>
+<div class="pillar-grid">
+<div class="pillar-card" style="background:linear-gradient(135deg,#bf5af2,#7c3aed)">
+<h3>反主流的价值体系</h3>
+<p>反逻辑、反严肃、反主流。找乐子是对无聊与焦虑的对抗，「比烂」提供了更直接的情绪体验，是网生一代的情绪宣泄出口。</p>
+</div>
+<div class="pillar-card" style="background:linear-gradient(135deg,#ff2d55,#bf5af2)">
+<h3>归属感与「婆罗门」</h3>
+<p>越自称「鼠鼠」「下水道」，背后暗含的「婆罗门」意味越浓。熟练运用复杂网络亚文化，是换取冲浪时代认可、被各圈层接纳的身份凭证。</p>
+</div>
+<div class="pillar-card" style="background:linear-gradient(135deg,#a855f7,#3b82f6)">
+<h3>游戏是天然的素材库</h3>
+<p>逆天剧情、玩家刻板印象、啼笑皆非的操作——「原神启动」「科目三」「丈育操作」都源于游戏。庞大的乐子人群体，让游戏成为抽象文化最重要的载体。</p>
+</div>
+</div>
+</div>
+
+<!-- 为什么能催生抽象 -->
+<div class="fade-up" style="margin-top:64px">
+<h3 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px">二、为什么是「射击/对抗类」最容易催生抽象？</h3>
+<p style="color:var(--text2);line-height:1.85;font-size:.95rem;max-width:920px;margin-bottom:28px">第五人格是「与抽象文化绑定最深的游戏」。拆解它的原生适配性，会发现对抗类游戏的三个结构性特征，恰好是抽象文化的催生剂——<strong style="color:var(--accent2)">这三点对休闲射击同样成立</strong>。</p>
+<div class="overview-grid">
+<div class="ov-card">
+<h3 style="color:var(--accent2)">1. 高惩罚玩法 → 尖叫发癫 & 佛系贴贴</h3>
+<p style="margin-top:8px">高心跳、高挫败的对抗中，尖叫发泄成为情绪出口；而社交属性又催生出另一极——不追求胜利、转圈贴贴、监管放人的「佛系局」。一边是受虐式的硬核反馈，一边是凶狠对抗下的温柔派对，两种发癫取向在同一局里共存。</p>
+</div>
+<div class="ov-card">
+<h3 style="color:var(--accent2)">2. 视听设计 → 现成的造梗素材</h3>
+<p style="margin-top:8px">扛人上肩、绑上狂欢椅、吃刀震慑、歪歪斜斜的走位、倒地全场尖叫……这些带荒诞癫狂意味的视听细节，本身就是天然的 meme 素材。荒诞哥特的画风与「反逻辑」的抽象解构形成共通的意味。</p>
+</div>
+<div class="ov-card">
+<h3 style="color:var(--accent2)">3. 赛后系统 → 让抽象持续发酵</h3>
+<p style="margin-top:8px">竞技向游戏少见的「赛后社交」，既是复盘交友的场所，也是厕味与逆天小作文的温床——从赛后拷打到赛后结婚，两种极端发癫都在此上演，加速了圈层默契与未成文规则的诞生。</p>
+</div>
+</div>
+<div style="background:rgba(191,90,242,.08);border:1px solid rgba(191,90,242,.18);border-radius:12px;padding:18px 22px;margin-top:20px;max-width:960px">
+<p style="font-size:.86rem;color:var(--text2);line-height:1.85">留下的核心玩家分两类：一类「喜欢受虐」的硬核极限党，一类「防止玩到高血压」的佛系社交党。后者催生了赛前求饶、相互转圈、过山车/秋千派对等<strong style="color:#fff">仅存在于社区的未成文玩法规则</strong>——熟练运用即是身份识别方式，这种默契无疑加速了亚文化的诞生。<strong style="color:var(--accent2)">关键启示：玩法的「原生感」比官方造梗更重要。</strong></p>
+</div>
+</div>
+
+<!-- 玩家从哪来 时间线 -->
+<div class="fade-up" style="margin-top:64px">
+<h3 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px">三、玩家从哪来：一条自发扩张的出圈链路</h3>
+<p style="color:var(--text2);line-height:1.85;font-size:.95rem;max-width:920px;margin-bottom:12px">抽象人遍地都是，但抽象人不一定知道这款游戏。第五人格的出圈，是一条「KOL 埋火苗 → meme 封神 → 玩家自发团建拉新」的链路——几乎没有买量痕迹，全靠内容与玩家驱动。</p>
+<div class="timeline">
+<div class="tl-item">
+<div class="tl-dot"></div>
+<div class="tl-phase">前 wflbb 时代</div>
+<h4>早期 KOL 推波助澜，吸引种子玩家</h4>
+<p>《溜鬼宝典》系列（带规则怪谈味的高难度老六打法）、主播的鬼叫式直播与名场面表情包，把「一言不合就发癫」的氛围维持得极有生命力。此时第五人格还只是一个小圈子。</p>
+</div>
+<div class="tl-item">
+<div class="tl-dot"></div>
+<div class="tl-phase">卢关封神</div>
+<h4>逆天 meme 成为「抽象届婆罗门」</h4>
+<p>2019 年网易与触漫 UGC 工具联动，角色变成漫画素材——「卢关小漫画 / 我服了爸爸」由此诞生。2023 年底触漫停服，源头成为「传说之地」，丢失考据来源的戏剧效果反而把这段漫画推上抽象届神坛。</p>
+</div>
+<div class="tl-item">
+<div class="tl-dot"></div>
+<div class="tl-phase">万象天引</div>
+<h4>「玩第五人格玩的」走进大众视野</h4>
+<p>玩家把梗刷进毫无关系的视频评论区，独特的二创风格辨识度极高。好奇心驱使「卢关到底是什么」的考究，加上跟风成为「抽象弄潮儿」，把大量广泛存在的抽象人群吸引进了游戏。</p>
+</div>
+</div>
+<div style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.18);border-radius:12px;padding:18px 22px;margin-top:8px;max-width:960px">
+<p style="font-size:.86rem;color:var(--text2);line-height:1.85"><strong style="color:var(--accent)">区别于「原神启动」的关键：</strong>原神启动玩的是「玩家梗」，而第五人格传播的梗与<strong style="color:#fff">玩法本身息息相关</strong>（你看到卢关却不懂它是什么，会驱动你去考究、进而下载）。这意味着——梗的传播直接为游戏导流，而非仅仅消费玩家形象。这正是「玩法可造梗」的复利。</p>
+</div>
+</div>
+
+<!-- 如何留住玩家 -->
+<div class="fade-up" style="margin-top:64px">
+<h3 style="font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:8px">四、如何把人留下：承接抽象用户，也承接大盘</h3>
+<p style="color:var(--text2);line-height:1.85;font-size:.95rem;max-width:920px;margin-bottom:28px">这波热度进来的不只有抽象用户，还有大盘用户。官方在运营上做了双向承接——让抽象党继续发癫，也给大盘玩家一个留下来的理由。</p>
+<div class="compare-grid">
+<div class="compare-card" style="border-left-color:var(--accent2)">
+<h4 style="color:#fff">降门槛：让新手友好</h4>
+<div class="ref" style="color:var(--accent2)">承接大盘 · 降低挫败感</div>
+<p>持续调整角色定位降低上手门槛（如律师从「下水道」修炼成单排友好的多面手）；天赋「飞轮效应」即便被削仍能提升躲刀容错；局内雷达改为显示地标的小地图——从机制与心理上提升新手体验。</p>
+</div>
+<div class="compare-card" style="border-left-color:var(--accent)">
+<h4 style="color:#fff">兼顾审美：亚文化 × 美型并行</h4>
+<div class="ref" style="color:var(--accent)">维系圈层 · 吸纳大众</div>
+<p>一面选取契合的亚文化 IP（伊藤润二「富江」复刻、三丽鸥库洛米/玉桂狗等地雷标配联动）巩固圈层调性；一面推出美型路线（渔女《妄梦》演绎之星 MV 等唯美内容）承接大盘审美。</p>
+</div>
+</div>
+</div>
+
+<!-- 结合可行性 核心结论 -->
+<div class="wow-section fade-up" style="background:
+radial-gradient(ellipse 80% 60% at 75% 20%, rgba(255,45,120,.2) 0%, transparent 55%),
+radial-gradient(ellipse 55% 45% at 18% 75%, rgba(168,85,247,.18) 0%, transparent 50%),
+radial-gradient(circle 160px at 88% 82%, rgba(0,240,255,.1) 0%, transparent 55%),
+linear-gradient(165deg,#1c0820 0%,#0d0d1a 50%,#10071c 100%);
+border-color:rgba(191,90,242,.35);margin-top:64px">
+<div class="wow-title">休闲射击 × 抽象社交群体：<span class="glow" style="background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 60px rgba(255,45,120,.5)">结合可行性结论</span></div>
+<div class="wow-subtitle" style="color:var(--neon-cyan)">第五人格验证的不是「非对称玩法」，而是「把游戏做成情绪宣泄阵地」的方法论——这套方法论可被休闲射击复用</div>
+<div class="wow-grid">
+<div class="wow-card">
+<div class="num">01</div>
+<h4>情绪宣泄载体 · 高度适配</h4>
+<p>休闲射击同样具备「高心跳反馈 + 高光/翻车时刻」，天然适合尖叫发癫与造梗。微缩大乱斗用<strong style="color:#fff">卡通化 / 非暴力</strong>消解真实挫败感（呼应 Splatoon「涂地」与花园战争「去暴力化」），即可既保留发癫快感、又不劝退轻度用户。</p>
+</div>
+<div class="wow-card">
+<div class="num">02</div>
+<h4>社交贴贴 × CP 文化 · 需主动设计</h4>
+<p>第五人格的佛系局、过山车派对、CP/角色养成是高黏性来源。微缩大乱斗应内置<strong style="color:#fff">非对抗社交场景与高魅力角色</strong>，让「不追求胜利的玩法」也成立——这正是硬核竞技射击（OW 仅 16% 女性）做不到的。</p>
+</div>
+<div class="wow-card">
+<div class="num">03</div>
+<h4>UGC / 二创飞轮 · 与 Deadlock 启示同源</h4>
+<p>「玩法可造梗」直接为游戏导流。把高光时刻、逆天操作、专属道具效果设计成<strong style="color:#fff">天然短视频素材</strong>（呼应 CHAPTER 01 中 Deadlock「传说装备 = 内容引擎」），并开放轻量 UGC 工具，构建低成本传播飞轮。</p>
+</div>
+<div class="wow-card">
+<div class="num">04</div>
+<h4>圈层文化阵地 · 长线复利</h4>
+<p>真正的护城河不是一次买量，而是<strong style="color:#fff">让玩家自发凝结氛围、造出未成文默契与梗</strong>。配套赛后社交、亚文化 IP 联动与美型内容双轨运营，把游戏建成「情绪宣泄社区」，才能像第五人格一样在数年后被玩家自己重新点燃。</p>
+</div>
+</div>
+<div style="background:rgba(191,90,242,.12);border-radius:10px;padding:18px 22px;margin-top:24px;position:relative;z-index:1">
+<p style="font-size:.88rem;color:var(--text2);line-height:1.85"><strong style="color:var(--accent2)">对微缩大乱斗的总启示：</strong>第五人格证明了一个被低估的事实——<strong style="color:#fff">一款对抗类游戏可以靠「用户文化」而非「运营投放」实现长线翻红</strong>。其方法论（高反馈玩法催生情绪宣泄 → 玩法级 meme 自发传播拉新 → 圈层默契沉淀为社区阵地 → 亚文化与大众审美双向承接）与休闲射击高度兼容。微缩大乱斗在「音乐学院 IP × 七大阵营世界观 × 全平台 × 卡通非暴力」的基础上，若从立项起就把游戏当作<strong style="color:var(--accent2)">「可被玩抽象群体接管的情绪宣泄阵地」</strong>来设计，就能同时接住三类用户：被硬核射击推出去的休闲党、追求社交贴贴的女性/年轻群体，以及广泛存在却难以触达的抽象/发癫群体。</p>
+</div>
+<div style="background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.18);border-radius:10px;padding:14px 20px;margin-top:16px;position:relative;z-index:1">
+<p style="font-size:.82rem;color:var(--text2);line-height:1.8"><strong style="color:var(--accent4)">风险提示：</strong>抽象文化「总离不开灰色与擦边」，群体狂欢需把控好度。在营造小众亚文化阵地时，禁忌点与合规风险必须前置考虑——氛围可以放飞，但内容安全的底线不能让渡。</p>
+</div>
+</div>
+
+</section>
+
+
+<!-- 页脚 -->
+<footer class="report-footer">
+  <p>微缩大乱斗 · 市场可行性分析报告 · CHAPTER 01-03</p>
+  <p>花园战争项目组 · 2026年4月 · 内部文件 · 请勿外传</p>
+  <p style="font-size:.75rem;color:rgba(255,255,255,.15);margin-top:6px">
+    数据来源：全球游戏市场报告 / Metacritic / Steam Charts / Valve 官方更新日志 / 腾讯游戏年报 / 七麦数据 / 触漫 / B站玩家社区
+  </p>
+</footer>
+
+
+<script>
+
+// Fade-up 动画
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'none';
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.fade-up, .wow-section').forEach(el => obs.observe(el));
+
+// 平滑滚动
+document.querySelectorAll('.top-nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const t = document.querySelector(href);
+      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════
+// 射击品类定位图 — 纯 SVG 散点图（增强版）
+// ═══════════════════════════════════════════════
+(function(){
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('positioning-chart');
+const tooltip = document.getElementById('chart-tooltip');
+if(!svg) return;
+
+const W = 1400, H = 900;
+svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+const margin = { top: 35, right: 60, bottom: 80, left: 90 };
+const plotW = W - margin.left - margin.right;
+const plotH = H - margin.top - margin.bottom;
+const xMin = -0.5, xMax = 10.5, yMin = -2, yMax = 55;
+
+function xScale(v) { return margin.left + (v - xMin) / (xMax - xMin) * plotW; }
+function yScale(v) { return margin.top + plotH - (v - yMin) / (yMax - yMin) * plotH; }
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+// SVG defs — 渐变 & 滤镜
+const defs = el('defs', {}, svg);
+
+// 蓝海区域渐变填充
+const blueGrad = el('linearGradient', { id: 'blueZoneGrad', x1: '0%', y1: '0%', x2: '100%', y2: '100%' }, defs);
+el('stop', { offset: '0%', 'stop-color': '#00f0ff', 'stop-opacity': '0.08' }, blueGrad);
+el('stop', { offset: '100%', 'stop-color': '#00c0ff', 'stop-opacity': '0.03' }, blueGrad);
+
+// 红海区域渐变填充
+const redGrad = el('linearGradient', { id: 'redZoneGrad', x1: '0%', y1: '100%', x2: '100%', y2: '0%' }, defs);
+el('stop', { offset: '0%', 'stop-color': '#ff2d55', 'stop-opacity': '0.06' }, redGrad);
+el('stop', { offset: '100%', 'stop-color': '#ff2d55', 'stop-opacity': '0.02' }, redGrad);
+
+// 气泡发光滤镜
+const glowFilter = el('filter', { id: 'bubbleGlow', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
+el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '3', result: 'blur' }, glowFilter);
+const glowMerge = el('feMerge', {}, glowFilter);
+el('feMergeNode', { in: 'blur' }, glowMerge);
+el('feMergeNode', { in: 'SourceGraphic' }, glowMerge);
+
+// 目标发光滤镜（更强）
+const targetGlow = el('filter', { id: 'targetGlow', x: '-80%', y: '-80%', width: '260%', height: '260%' }, defs);
+el('feGaussianBlur', { in: 'SourceGraphic', stdDeviation: '6', result: 'blur' }, targetGlow);
+const tgMerge = el('feMerge', {}, targetGlow);
+el('feMergeNode', { in: 'blur' }, tgMerge);
+el('feMergeNode', { in: 'SourceGraphic' }, tgMerge);
+
+// 背景
+el('rect', { x: 0, y: 0, width: W, height: H, fill: '#08081a' }, svg);
+el('rect', { x: margin.left, y: margin.top, width: plotW, height: plotH, fill: '#0c0c22', rx: 6 }, svg);
+
+// 网格线 — 加亮
+for (let i = 0; i <= 10; i++) {
+  const x = xScale(i);
+  el('line', { x1: x, y1: margin.top, x2: x, y2: margin.top + plotH, stroke: i === 5 ? '#2a2a50' : '#1c1c38', 'stroke-width': i === 5 ? 1.5 : 1 }, svg);
+}
+for (let j = 0; j <= 50; j += 10) {
+  const y = yScale(j);
+  el('line', { x1: margin.left, y1: y, x2: margin.left + plotW, y2: y, stroke: j === 30 ? '#2a2a50' : '#1c1c38', 'stroke-width': j === 30 ? 1.5 : 1 }, svg);
+}
+
+// X 轴刻度 — 加大
+for (let i = 0; i <= 10; i++) {
+  const x = xScale(i);
+  const t = el('text', { x, y: margin.top + plotH + 28, fill: '#6a6a8a', 'font-size': 14, 'text-anchor': 'middle', 'font-weight': 500 }, svg);
+  t.textContent = i;
+}
+const xTitle = el('text', { x: margin.left + plotW / 2, y: H - 12, fill: '#8888aa', 'font-size': 15, 'text-anchor': 'middle', 'font-weight': 600 }, svg);
+xTitle.textContent = '← 硬核　　　　　　硬核度　　　　　　休闲 →';
+
+// Y 轴刻度 — 加大
+for (let j = 0; j <= 50; j += 10) {
+  const y = yScale(j);
+  const t = el('text', { x: margin.left - 14, y: y + 5, fill: '#6a6a8a', 'font-size': 14, 'text-anchor': 'end', 'font-weight': 500 }, svg);
+  t.textContent = j + '%';
+}
+const yTitle = el('text', { x: 22, y: margin.top + plotH / 2, fill: '#8888aa', 'font-size': 15, 'text-anchor': 'middle', 'font-weight': 600, transform: 'rotate(-90, 22, ' + (margin.top + plotH / 2) + ')' }, svg);
+yTitle.textContent = '女性玩家占比 (%)';
+
+// ── 蓝海区域（加强） ──
+el('rect', { x: xScale(6), y: yScale(55), width: xScale(10.5) - xScale(6), height: yScale(28) - yScale(55), fill: 'url(#blueZoneGrad)', stroke: 'rgba(0,240,255,0.4)', 'stroke-width': 2.5, 'stroke-dasharray': '8 5', rx: 8 }, svg);
+// 角落装饰
+var bzx1 = xScale(6), bzy1 = yScale(55), bzx2 = xScale(10.5), bzy2 = yScale(28);
+el('line', { x1: bzx1, y1: bzy1, x2: bzx1 + 20, y2: bzy1, stroke: '#00f0ff', 'stroke-width': 3, opacity: 0.6 }, svg);
+el('line', { x1: bzx1, y1: bzy1, x2: bzx1, y2: bzy1 + 20, stroke: '#00f0ff', 'stroke-width': 3, opacity: 0.6 }, svg);
+el('line', { x1: bzx2, y1: bzy1, x2: bzx2 - 20, y2: bzy1, stroke: '#00f0ff', 'stroke-width': 3, opacity: 0.6 }, svg);
+el('line', { x1: bzx2, y1: bzy1, x2: bzx2, y2: bzy1 + 20, stroke: '#00f0ff', 'stroke-width': 3, opacity: 0.6 }, svg);
+const blueT = el('text', { x: xScale(8.25), y: yScale(53), fill: '#00f0ff', 'font-size': 17, 'text-anchor': 'middle', 'font-weight': 800, opacity: 0.85 }, svg);
+blueT.textContent = '蓝海区域';
+const blueT2 = el('text', { x: xScale(8.25), y: yScale(53) + 22, fill: 'rgba(0,240,255,0.65)', 'font-size': 13, 'text-anchor': 'middle', 'font-weight': 500 }, svg);
+blueT2.textContent = '休闲 × 高女性占比';
+
+// ── 红海区域（加强） ──
+el('rect', { x: xScale(-0.5), y: yScale(25), width: xScale(4.5) - xScale(-0.5), height: yScale(-2) - yScale(25), fill: 'url(#redZoneGrad)', stroke: 'rgba(255,45,85,0.3)', 'stroke-width': 2, 'stroke-dasharray': '6 4', rx: 8 }, svg);
+const redT = el('text', { x: xScale(2), y: yScale(0), fill: 'rgba(255,45,85,0.7)', 'font-size': 15, 'text-anchor': 'middle', 'font-weight': 800 }, svg);
+redT.textContent = '红海区域';
+const redT2 = el('text', { x: xScale(2), y: yScale(0) + 20, fill: 'rgba(255,45,85,0.5)', 'font-size': 12, 'text-anchor': 'middle', 'font-weight': 500 }, svg);
+redT2.textContent = '硬核 × 低女性占比';
+
+// 游戏数据
+const games = [
+  { name: 'CS2', x: 1.2, y: 10, size: 42, color: '#ff2d55', cat: '极硬核' },
+  { name: 'Valorant', x: 1.8, y: 35, size: 48, color: '#ff2d55', cat: '极硬核' },
+  { name: 'Escape from Tarkov', x: 0.8, y: 4, size: 22, color: '#ff2d55', cat: '极硬核' },
+  { name: 'R6 Siege', x: 2.2, y: 23, size: 38, color: '#ff2d55', cat: '极硬核' },
+  { name: 'Overwatch 2', x: 3.5, y: 32, size: 45, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Deadlock', x: 2.8, y: 12, size: 30, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Deadlock 街头大乱斗', x: 4.6, y: 18, size: 18, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Marvel Rivals', x: 3.8, y: 26, size: 28, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'FragPunk', x: 3.2, y: 15, size: 7, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: '穿越火线', x: 2.5, y: 8, size: 35, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Call of Duty', x: 2.5, y: 18, size: 52, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Battlefield 2042', x: 2.8, y: 20, size: 22, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'TF2', x: 3.2, y: 19, size: 28, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Destiny 2', x: 3.5, y: 28, size: 42, color: '#bf5af2', cat: '硬核偏竞技' },
+  { name: 'Fortnite', x: 5.5, y: 34, size: 55, color: '#ffd60a', cat: '中间地带' },
+  { name: 'Apex Legends', x: 4.0, y: 20, size: 38, color: '#ffd60a', cat: '中间地带' },
+  { name: '三角洲行动', x: 3.6, y: 12, size: 46, color: '#ffd60a', cat: '中间地带' },
+  { name: '和平精英', x: 4.8, y: 30, size: 50, color: '#ffd60a', cat: '中间地带' },
+  { name: 'PUBG', x: 4.3, y: 25, size: 45, color: '#ffd60a', cat: '中间地带' },
+  { name: 'Free Fire', x: 4.7, y: 30, size: 48, color: '#ffd60a', cat: '中间地带' },
+  { name: 'COD Mobile', x: 4.0, y: 25, size: 38, color: '#ffd60a', cat: '中间地带' },
+  { name: 'Paladins', x: 4.4, y: 26, size: 18, color: '#ffd60a', cat: '中间地带' },
+  { name: 'The Finals', x: 5.2, y: 42, size: 32, color: '#ffd60a', cat: '中间地带' },
+  { name: 'Splatoon 系列', x: 7.8, y: 40, size: 42, color: '#30d158', cat: '休闲射击' },
+  { name: '花园战争系列', x: 7.5, y: 38, size: 25, color: '#30d158', cat: '休闲射击' },
+  { name: 'Helldivers 2', x: 6.2, y: 22, size: 35, color: '#30d158', cat: '休闲射击' },
+  { name: '荒野行动', x: 5.0, y: 42, size: 15, color: '#30d158', cat: '休闲射击' },
+  { name: 'Deep Rock Galactic', x: 5.5, y: 24, size: 20, color: '#30d158', cat: '休闲射击' },
+  { name: '超级动物大逃杀', x: 8.8, y: 42, size: 15, color: '#8e8e93', cat: '超休闲' },
+  { name: '香肠派对', x: 9.2, y: 45, size: 20, color: '#8e8e93', cat: '超休闲' },
+];
+
+const noiseParty = { name: '★ 微缩大乱斗', x: 7.8, y: 38, size: 40, color: '#00f0ff', cat: '微缩大乱斗（目标定位）', isTarget: true };
+
+const labelOffsets = {
+  'CS2': { dx: -55, dy: -28 }, 'Valorant': { dx: 80, dy: 5 },
+  'Escape from Tarkov': { dx: 0, dy: 34 }, 'R6 Siege': { dx: 75, dy: -12 },
+  'Overwatch 2': { dx: -110, dy: -36, line: true }, 'Deadlock': { dx: -90, dy: 36, line: true },
+  'Deadlock 街头大乱斗': { dx: 115, dy: -38, line: true }, 'Marvel Rivals': { dx: 95, dy: -26, line: true },
+  'FragPunk': { dx: -80, dy: -18, line: true }, '穿越火线': { dx: -75, dy: -20, line: true },
+  'Call of Duty': { dx: -100, dy: 10, line: true }, 'Battlefield 2042': { dx: 110, dy: 12, line: true },
+  'TF2': { dx: 65, dy: 32, line: true }, 'Destiny 2': { dx: -100, dy: 18, line: true },
+  'Fortnite': { dx: 75, dy: -34 }, 'Apex Legends': { dx: -90, dy: -26, line: true },
+  '三角洲行动': { dx: -100, dy: 32, line: true }, '和平精英': { dx: 80, dy: 20, line: true },
+  'PUBG': { dx: -85, dy: -20, line: true }, 'Free Fire': { dx: 85, dy: -18, line: true },
+  'COD Mobile': { dx: -90, dy: -34, line: true }, 'Paladins': { dx: 65, dy: -26, line: true },
+  'The Finals': { dx: 80, dy: 5 },
+  'Splatoon 系列': { dx: -90, dy: -22 }, '花园战争系列': { dx: -100, dy: 18 },
+  'Helldivers 2': { dx: 80, dy: -20 }, '荒野行动': { dx: -75, dy: 18, line: true },
+  'Deep Rock Galactic': { dx: 100, dy: 10, line: true },
+  '超级动物大逃杀': { dx: -90, dy: -14 }, '香肠派对': { dx: 60, dy: -26 },
+};
+
+function drawBubble(g, parent) {
+  const cx = xScale(g.x), cy = yScale(g.y), r = g.size * 0.55;
+  const group = el('g', { class: 'bubble', cursor: 'pointer' }, parent);
+
+  if (g.isTarget) {
+    // ── 微缩大乱斗 目标标记 ──
+    const d = r * 1.2;
+    const diamondPath = 'M ' + cx + ' ' + (cy - d) + ' L ' + (cx + d) + ' ' + cy + ' L ' + cx + ' ' + (cy + d) + ' L ' + (cx - d) + ' ' + cy + ' Z';
+    // 外层大光晕
+    const outerPulse = el('path', { d: 'M ' + cx + ' ' + (cy - d * 1.5) + ' L ' + (cx + d * 1.5) + ' ' + cy + ' L ' + cx + ' ' + (cy + d * 1.5) + ' L ' + (cx - d * 1.5) + ' ' + cy + ' Z', fill: 'none', stroke: '#00f0ff', 'stroke-width': 1.5, opacity: 0 }, group);
+    el('animate', { attributeName: 'opacity', values: '0.4;0;0.4', dur: '3s', repeatCount: 'indefinite' }, outerPulse);
+    el('animate', { attributeName: 'stroke-width', values: '1.5;0.5;1.5', dur: '3s', repeatCount: 'indefinite' }, outerPulse);
+    // 内层呼吸
+    el('path', { d: diamondPath, fill: 'rgba(0,240,255,0.1)', stroke: 'rgba(0,240,255,0.3)', 'stroke-width': 1 }, group);
+    const pulse = el('path', { d: diamondPath, fill: 'none', stroke: '#00f0ff', 'stroke-width': 2.5, opacity: 1 }, group);
+    el('animate', { attributeName: 'opacity', values: '1;0.3;1', dur: '2s', repeatCount: 'indefinite' }, pulse);
+    // 实体菱形
+    el('path', { d: diamondPath, fill: 'rgba(0,240,255,0.15)', stroke: '#00f0ff', 'stroke-width': 3, filter: 'url(#targetGlow)' }, group);
+    // 中心十字
+    el('line', { x1: cx - 6, y1: cy, x2: cx + 6, y2: cy, stroke: '#00f0ff', 'stroke-width': 2, opacity: 0.7 }, group);
+    el('line', { x1: cx, y1: cy - 6, x2: cx, y2: cy + 6, stroke: '#00f0ff', 'stroke-width': 2, opacity: 0.7 }, group);
+    // 标签
+    const label = el('text', { x: cx, y: cy - d - 14, fill: '#00f0ff', 'font-size': 16, 'font-weight': 800, 'text-anchor': 'middle', filter: 'url(#targetGlow)' }, group);
+    label.textContent = '★ 微缩大乱斗';
+    const label2 = el('text', { x: cx, y: cy - d - 14 + 20, fill: 'rgba(0,240,255,0.7)', 'font-size': 13, 'font-weight': 500, 'text-anchor': 'middle' }, group);
+    label2.textContent = '（目标定位）';
+  } else {
+    // ── 普通气泡 ──
+    // 外环光晕
+    el('circle', { cx, cy, r: r + 5, fill: 'none', stroke: g.color, 'stroke-width': 0.8, opacity: 0.2 }, group);
+    // 主气泡 — 提高填充度
+    el('circle', { cx, cy, r, fill: g.color, opacity: 0.35, stroke: g.color, 'stroke-width': 2, 'stroke-opacity': 0.85, filter: 'url(#bubbleGlow)' }, group);
+    // 高光
+    el('circle', { cx: cx - r * 0.2, cy: cy - r * 0.25, r: r * 0.3, fill: g.color, opacity: 0.18 }, group);
+    // 标签
+    const offset = labelOffsets[g.name] || { dx: 0, dy: -(r + 18) };
+    const lx = cx + offset.dx, ly = cy + offset.dy;
+    if (offset.line) {
+      el('line', { x1: cx, y1: cy, x2: lx, y2: ly, stroke: 'rgba(255,255,255,0.18)', 'stroke-width': 1.2, 'stroke-dasharray': '4 3' }, group);
+      el('circle', { cx: lx, cy: ly, r: 2.5, fill: 'rgba(255,255,255,0.25)' }, group);
+    }
+    const textNode = el('text', { x: lx, y: ly - 5, fill: '#eee', 'font-size': 13.5, 'text-anchor': 'middle', 'font-weight': 600, 'paint-order': 'stroke', stroke: 'rgba(8,8,26,0.92)', 'stroke-width': 4.5, 'stroke-linejoin': 'round' }, group);
+    textNode.textContent = g.name;
+  }
+
+  group.addEventListener('mouseenter', function(e) {
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = '<div style="font-weight:700;font-size:15px;margin-bottom:5px;color:' + g.color + '">' + g.name + '</div>' +
+      '<div style="font-size:12px;opacity:.6;margin-bottom:5px">' + g.cat + '</div>' +
+      '<div>硬核度：<b>' + g.x + '</b>（' + (g.x <= 3 ? '偏硬核' : g.x <= 6 ? '中等' : '偏休闲') + '）</div>' +
+      '<div>女性占比：<b>' + g.y + '%</b></div>' +
+      '<div>影响力指数：<b>' + g.size + '</b></div>';
+  });
+  group.addEventListener('mousemove', function(e) {
+    var pad = 16, left = e.clientX + pad, top = e.clientY + pad;
+    var ttRect = tooltip.getBoundingClientRect();
+    if (left + ttRect.width > window.innerWidth - 10) left = e.clientX - ttRect.width - pad;
+    if (top + ttRect.height > window.innerHeight - 10) top = e.clientY - ttRect.height - pad;
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  });
+  group.addEventListener('mouseleave', function() { tooltip.style.display = 'none'; });
+}
+
+games.forEach(function(g) { drawBubble(g, svg); });
+drawBubble(noiseParty, svg);
+
+// 图例 — 加大加清晰
+var legendData = [
+  { label: '极硬核', color: '#ff2d55' },
+  { label: '硬核偏竞技', color: '#bf5af2' },
+  { label: '中间地带', color: '#ffd60a' },
+  { label: '休闲射击', color: '#30d158' },
+  { label: '超休闲', color: '#8e8e93' },
+  { label: '微缩大乱斗（目标）', color: '#00f0ff' },
+];
+var lgX = margin.left + 14, lgY = margin.top + 14;
+var lgW = 190, lgH = legendData.length * 28 + 20;
+el('rect', { x: lgX, y: lgY, width: lgW, height: lgH, fill: 'rgba(8,8,26,0.92)', stroke: '#2a2a4e', 'stroke-width': 1.5, rx: 8 }, svg);
+legendData.forEach(function(item, i) {
+  var ly = lgY + 20 + i * 28;
+  if (item.label.indexOf('微缩大乱斗') >= 0) {
+    var d = 7, lcx = lgX + 18, lcy = ly;
+    el('path', { d: 'M ' + lcx + ' ' + (lcy - d) + ' L ' + (lcx + d) + ' ' + lcy + ' L ' + lcx + ' ' + (lcy + d) + ' L ' + (lcx - d) + ' ' + lcy + ' Z', fill: item.color, opacity: 0.6, stroke: item.color, 'stroke-width': 2 }, svg);
+  } else {
+    el('circle', { cx: lgX + 18, cy: ly, r: 7, fill: item.color, opacity: 0.55, stroke: item.color, 'stroke-width': 2 }, svg);
+  }
+  var t = el('text', { x: lgX + 34, y: ly + 5, fill: '#ccc', 'font-size': 13.5, 'font-weight': 500 }, svg);
+  t.textContent = item.label;
+});
+})();
+
+
+function switchCaseTab(tabId) {
+  // 切换按钮状态
+  document.querySelectorAll('.case-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabId);
+  });
+  // 切换面板
+  document.querySelectorAll('.case-tab-panel').forEach(panel => {
+    panel.style.display = panel.id === 'panel-' + tabId ? 'block' : 'none';
+  });
+}
+
+</script>
+
+</body>
+</html>

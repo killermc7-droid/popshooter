@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 体素撤离玩法</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;--text:#e8e6f0;--text2:rgba(255,255,255,.62);--text3:rgba(255,255,255,.4);
+  --accent:#ff2d55;--accent2:#bf5af2;--accent3:#30d158;--accent4:#ffd60a;--cyan:#00f0ff;
+  --grad1:linear-gradient(135deg,#ff2d55,#bf5af2);
+  --grad2:linear-gradient(135deg,#00f0ff,#bf5af2);
+  --grad3:linear-gradient(135deg,#ffd60a,#ff2d55);
+  --grad4:linear-gradient(135deg,#30d158,#34c759);
+  --radius:20px;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);
+  --neon-cyan:#00f0ff;--card-solid:#15152a
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;overflow-x:hidden}
+
+/* 背景装饰 */
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.32}
+.glow-orb.pink{width:600px;height:600px;background:#ff2d55;top:-200px;right:-100px;animation:orbFloat 20s ease-in-out infinite}
+.glow-orb.violet{width:500px;height:500px;background:#7c3aed;bottom:10%;left:-150px;animation:orbFloat 26s ease-in-out infinite reverse}
+.glow-orb.cyan{width:400px;height:400px;background:#00f0ff;top:50%;right:18%;animation:orbFloat 32s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(46px,-34px) scale(1.08)}66%{transform:translate(-32px,28px) scale(.94)}}
+@media(prefers-reduced-motion:reduce){.glow-orb{animation:none!important}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 88% 66% at 50% 28%,#000 38%,transparent 100%);mask-image:radial-gradient(ellipse 88% 66% at 50% 28%,#000 38%,transparent 100%)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 110% 80% at 50% -5%,rgba(124,58,237,.12),transparent 55%);box-shadow:inset 0 0 300px 70px rgba(5,5,12,.9)}
+
+/* 导航 */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);background:rgba(10,10,18,.75);border-bottom:1px solid var(--border)}
+.nav.scrolled{box-shadow:0 2px 32px rgba(255,45,85,.15)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:1.2rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.nav-links{display:flex;gap:14px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.84rem;font-weight:500;transition:color .3s;position:relative;padding-bottom:4px}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--grad1)}
+.nav-back{display:flex;align-items:center;gap:6px;color:var(--text3);text-decoration:none;font-size:.84rem;font-weight:600;transition:color .3s}
+.nav-back:hover{color:#fff}
+.nav-back span{font-size:1rem}
+@media(max-width:980px){.nav-links{display:none}}
+
+/* Hero */
+.hero{min-height:72vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 32px 80px;position:relative;overflow:hidden;background:linear-gradient(170deg,rgba(10,10,18,.82) 0%,rgba(26,16,53,.74) 50%,rgba(13,17,23,.88) 100%)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(255,45,85,.07),transparent 70%)}
+.hero-content{position:relative;z-index:2;max-width:920px}
+.hero-badge{display:inline-block;padding:8px 22px;border-radius:999px;background:rgba(255,45,85,.15);border:1px solid rgba(255,45,85,.3);color:var(--accent);font-size:.8rem;font-weight:700;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase}
+.hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:900;line-height:1.1;margin-bottom:22px;letter-spacing:-.03em}
+.hero h1 .hl{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .sub{display:block;font-size:clamp(1rem,2.5vw,1.45rem);font-weight:400;color:var(--text2);margin-top:14px;letter-spacing:.05em}
+.hero-wow{display:inline-block;padding:14px 36px;border-radius:999px;background:var(--grad1);color:#fff;font-size:1.05rem;font-weight:800;letter-spacing:.5px;margin-bottom:28px;box-shadow:0 0 40px rgba(255,45,85,.4);position:relative;overflow:hidden}
+.hero-wow::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.hero p{font-size:1.12rem;color:var(--text2);max-width:720px;margin:0 auto 36px;line-height:1.9}
+.hero-tags{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-tags span{padding:8px 20px;border-radius:999px;font-size:.82rem;font-weight:600;border:1px solid var(--border);background:var(--glass);color:var(--text2)}
+.hero-tags span:nth-child(1){border-color:rgba(255,45,85,.4);color:var(--accent)}
+.hero-tags span:nth-child(2){border-color:rgba(191,90,242,.4);color:var(--accent2)}
+.hero-tags span:nth-child(3){border-color:rgba(48,209,88,.4);color:var(--accent3)}
+.hero-tags span:nth-child(4){border-color:rgba(255,214,10,.4);color:var(--accent4)}
+.hero-tags span:nth-child(5){border-color:rgba(0,240,255,.4);color:var(--cyan)}
+
+/* 通用 Section */
+section{padding:88px 32px;max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.reveal.show{opacity:1;transform:none}
+.section-divider{width:60px;height:3px;border-radius:2px;background:var(--grad1);margin-bottom:22px}
+.section-label{display:inline-block;padding:6px 18px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;border:1px solid rgba(255,45,85,.4);color:var(--accent)}
+.section-title{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:900;margin-bottom:14px;line-height:1.2}
+.section-title .g{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{font-size:1.04rem;color:var(--text2);max-width:820px;margin-bottom:40px;line-height:1.9}
+.sub-head{display:flex;align-items:center;gap:12px;font-size:1.5rem;font-weight:900;color:#fff;margin:8px 0 8px}
+.sub-head .sb-bar{width:6px;height:28px;border-radius:3px;background:var(--grad1)}
+.sub-head .sb-tag{font-size:.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:rgba(191,90,242,.14);color:var(--accent2);border:1px solid rgba(191,90,242,.3)}
+.lead{font-size:1.02rem;color:var(--text);background:rgba(255,255,255,.03);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:30px;transition:all .4s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,45,85,.3);box-shadow:0 8px 40px rgba(255,45,85,.1)}
+.card h3{font-size:1.12rem;font-weight:800;margin-bottom:10px;color:#fff}
+.card p{font-size:.92rem;color:var(--text2);line-height:1.75}
+
+/* 搜打撤流程条 */
+.ext-flow{display:flex;flex-wrap:wrap;gap:0;margin:24px 0 8px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.ext-step{flex:1;min-width:155px;padding:24px 20px;background:var(--card-solid);border-right:1px solid var(--border);position:relative;transition:all .35s}
+.ext-step:last-child{border-right:none}
+.ext-step:hover{background:rgba(0,240,255,.05)}
+.ext-step .es-n{font-size:.66rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--neon-cyan);margin-bottom:10px}
+.ext-step .es-i{font-size:1.7rem;margin-bottom:8px}
+.ext-step h5{font-size:1rem;font-weight:800;color:#fff;margin-bottom:6px}
+.ext-step p{font-size:.8rem;color:var(--text2);line-height:1.6}
+.ext-step::after{content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);z-index:3;color:var(--neon-cyan);font-weight:900;font-size:1rem}
+.ext-step:last-child::after{display:none}
+@media(max-width:820px){.ext-step{border-right:none;border-bottom:1px solid var(--border)}.ext-step::after{display:none}}
+
+/* 风险卡片 */
+.risk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:24px}
+.risk-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .4s;position:relative;overflow:hidden}
+.risk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.risk-card.lv1::before{background:var(--grad4)}.risk-card.lv2::before{background:var(--grad3)}
+.risk-card.lv3::before{background:var(--grad1)}.risk-card.lv4::before{background:linear-gradient(90deg,#ff2d55,#bf5af2)}
+.risk-card:hover{transform:translateY(-4px)}
+.risk-card .rk-time{font-size:.7rem;font-weight:800;letter-spacing:.5px;padding:3px 11px;border-radius:999px;display:inline-block;margin-bottom:12px}
+.risk-card.lv1 .rk-time{background:rgba(48,209,88,.14);color:var(--accent3)}
+.risk-card.lv2 .rk-time{background:rgba(255,214,10,.14);color:var(--accent4)}
+.risk-card.lv3 .rk-time{background:rgba(255,45,85,.14);color:var(--accent)}
+.risk-card.lv4 .rk-time{background:rgba(191,90,242,.16);color:var(--accent2)}
+.risk-card h5{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px}
+.risk-card p{font-size:.84rem;color:var(--text2);line-height:1.65}
+
+/* 撤离点 */
+.ext-point{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.epc{background:var(--card-solid);border:1px solid var(--border);border-radius:16px;padding:22px;text-align:center;position:relative}
+.epc .ep-dot{width:48px;height:48px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:2px solid}
+.epc.ok .ep-dot{border-color:var(--accent3);background:rgba(48,209,88,.12);box-shadow:0 0 20px rgba(48,209,88,.3)}
+.epc.warn .ep-dot{border-color:var(--accent4);background:rgba(255,214,10,.12);box-shadow:0 0 20px rgba(255,214,10,.3)}
+.epc.hot .ep-dot{border-color:var(--accent);background:rgba(255,45,85,.12);box-shadow:0 0 20px rgba(255,45,85,.35)}
+.epc h5{font-size:.98rem;font-weight:800;color:#fff;margin-bottom:6px}
+.epc p{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+/* 战利品分级 */
+.loot-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:20px}
+.loot-tier{border-radius:14px;padding:20px;border:1px solid var(--border);background:var(--glass)}
+.loot-tier .lt-q{font-size:.66rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 11px;border-radius:999px;display:inline-block;margin-bottom:10px}
+.loot-tier.t-c .lt-q{background:rgba(142,142,147,.18);color:#c7c7cc}
+.loot-tier.t-r .lt-q{background:rgba(0,240,255,.14);color:var(--neon-cyan)}
+.loot-tier.t-e .lt-q{background:rgba(255,45,85,.14);color:var(--accent)}
+.loot-tier.t-l .lt-q{background:rgba(255,214,10,.14);color:var(--accent4)}
+.loot-tier h5{font-size:.95rem;font-weight:800;color:#fff;margin-bottom:6px}
+.loot-tier p{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+/* 核心张力 */
+.wow{background:linear-gradient(170deg,#1a0520 0%,#0d0d1a 100%);border-radius:var(--radius);border:1px solid rgba(255,45,85,.2);padding:44px 38px;margin:36px 0;position:relative;overflow:hidden}
+.wow::before{content:'';position:absolute;top:-100px;right:-100px;width:380px;height:380px;background:radial-gradient(circle,rgba(255,45,85,.2),transparent 70%);pointer-events:none}
+.wow h3{font-size:clamp(1.4rem,3.2vw,2rem);font-weight:900;text-align:center;margin-bottom:10px;color:#fff;position:relative;z-index:1}
+.wow h3 .g{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wow .st{text-align:center;color:var(--cyan);font-weight:600;margin-bottom:30px;position:relative;z-index:1}
+.flow{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap;position:relative;z-index:1}
+.fstep{flex:1;min-width:200px;border-radius:16px;border:1px solid var(--border);background:var(--glass);padding:24px}
+.fstep .n{width:30px;height:30px;border-radius:50%;background:var(--grad1);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:12px}
+.fstep h4{color:#fff;font-size:1.02rem;margin-bottom:8px}
+.fstep p{font-size:.88rem;color:var(--text2)}
+
+/* 设计意图卡片 */
+.intent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:24px}
+.intent-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:28px;transition:all .4s;position:relative;overflow:hidden}
+.intent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.intent-card:nth-child(1)::before{background:var(--grad2)}
+.intent-card:nth-child(2)::before{background:var(--grad4)}
+.intent-card:nth-child(3)::before{background:var(--grad1)}
+.intent-card:nth-child(4)::before{background:var(--grad3)}
+.intent-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,45,85,.1)}
+.intent-card .ic-num{font-size:2rem;font-weight:900;opacity:.15;position:absolute;top:14px;right:20px;font-style:italic}
+.intent-card h4{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px}
+.intent-card p{font-size:.86rem;color:var(--text2);line-height:1.7}
+
+/* footer */
+footer{text-align:center;padding:60px 32px 50px;border-top:1px solid var(--border);position:relative;z-index:1}
+.flogo{font-size:1.4rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+footer p{color:var(--text3);font-size:.84rem}
+</style>
+</head>
+<body>
+<div class="glow-orb pink"></div>
+<div class="glow-orb violet"></div>
+<div class="glow-orb cyan"></div>
+
+<nav class="nav" id="nav">
+<div class="nav-inner">
+  <div class="nav-logo">体素撤离玩法</div>
+  <ul class="nav-links">
+    <li><a href="#overview">玩法概述</a></li>
+    <li><a href="#loop">搜打撤流程</a></li>
+    <li><a href="#risk">风险收益曲线</a></li>
+    <li><a href="#extraction">撤离点状态机</a></li>
+    <li><a href="#loot">战利品养成</a></li>
+    <li><a href="#tension">核心张力</a></li>
+    <li><a href="#design">设计意图</a></li>
+  </ul>
+  <a class="nav-back" href="关卡玩法白皮书.html"><span>←</span> 关卡玩法白皮书</a>
+</div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+<div class="hero-content">
+  <span class="hero-badge">07+ / Extraction · 体素撤离玩法专篇</span>
+  <h1><span class="hl">体素撤离</span>玩法
+  <span class="sub">搜 · 打 · 撤 — PvEvP 高风险高回报支线</span></h1>
+  <div class="hero-wow">破坏即采集 · 贪 or 走 · 永久入库</div>
+  <p>在主玩法「对抗推塔」之外，开辟一条<strong style="color:#fff">高风险高回报的 PvEvP「搜打撤」支线</strong>（对标《暗区突围》《逃离塔科夫》），融合本作「体素破坏即采集」内核。撤离成功则收益永久入库，阵亡则背包全数掉落——把「贪 or 走」的张力拉满。</p>
+  <div class="hero-tags">
+    <span>PvEvP</span>
+    <span>搜打撤</span>
+    <span>局外成长</span>
+    <span>体素破坏</span>
+    <span>18 分钟单局</span>
+  </div>
+</div>
+</header>
+
+<!-- 玩法概述 -->
+<section id="overview" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">01 / Overview</span>
+<h2 class="section-title">玩法<span class="g">概述</span></h2>
+<p class="section-desc">以微缩桌面战场为舞台，多支小队同时空降，三项行动构成一局——<strong style="color:#fff">搜刮 · 交火 · 撤离</strong>，缺一不可。</p>
+
+<div class="lead"><strong style="color:#fff">为什么适配本作：</strong>本作「射击破坏一切体素 → 资源自动吸附」的核心循环，天然就是最爽快的「搜刮」动作——<strong style="color:#fff">搜刮即破坏、破坏即采集</strong>，无需翻箱倒柜的繁琐交互，把撤离品类最枯燥的搜包环节，变成本作最解压的破坏快感。</div>
+
+<div class="grid g3" style="margin-top:32px">
+  <div class="card">
+    <h3>🔍 竞品对标</h3>
+    <p>《暗区突围》的背包管理张力 + 《逃离塔科夫》的风险博弈感，融入本作体素破坏核心，降低上手门槛，强化爽点密度。</p>
+  </div>
+  <div class="card">
+    <h3>⚔️ 混战博弈</h3>
+    <p>多支 2–4 人小队同图竞争，AI 巡逻队持续施压，玩家相互之间存在伏击与反伏击，提供远超 PvE 的紧张感。</p>
+  </div>
+  <div class="card">
+    <h3>📦 永久入库</h3>
+    <p>撤离成功的战利品跨局永久保留，构建「局外成长」长线钩子，与主玩法形成互补而非替代关系。</p>
+  </div>
+</div>
+</section>
+
+<!-- 搜打撤流程 -->
+<section id="loop" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">02 / Core Loop</span>
+<h2 class="section-title">搜 · 打 · 撤<span class="g">核心流程</span></h2>
+<p class="section-desc">三个动词构成本玩法完整的行动链，每一步都与体素破坏机制深度绑定。</p>
+
+<div class="ext-flow">
+  <div class="ext-step">
+    <div class="es-n">Step 01 · 搜</div>
+    <div class="es-i">🔫</div>
+    <h5>破坏搜刮</h5>
+    <p>射击破坏体素物件，战利品自动弹出吸附入背包。越搜越富，但背包越满损失越大。</p>
+  </div>
+  <div class="ext-step">
+    <div class="es-n">Step 02 · 打</div>
+    <div class="es-i">⚔️</div>
+    <h5>交火博弈</h5>
+    <p>在 AI 巡逻队与他队玩家的双重压力下周旋。可选择绕行规避，也可主动打劫战利品更丰厚的队伍。</p>
+  </div>
+  <div class="ext-step">
+    <div class="es-n">Step 03 · 撤</div>
+    <div class="es-i">🚀</div>
+    <h5>撤离抉择</h5>
+    <p>抵达激活的撤离点，站桩读条 8 秒撤离。见好就撤 or 继续贪高价值区——这个抉择贯穿全局。</p>
+  </div>
+  <div class="ext-step">
+    <div class="es-n">结算</div>
+    <div class="es-i">🏆</div>
+    <h5>入库 or 掉落</h5>
+    <p>撤离成功：战利品永久入库。中途阵亡：背包全数掉落，被他队拾取。</p>
+  </div>
+</div>
+</section>
+
+<!-- 风险收益曲线 -->
+<section id="risk" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">03 / Risk × Reward</span>
+<h2 class="section-title">风险—收益<span class="g">曲线</span></h2>
+<p class="section-desc">越往后期，收益越高、风险也越大。系统通过时间轴持续加压，迫使玩家在「见好就撤」与「贪一波大的」之间做出抉择——这正是撤离品类的核心心流。</p>
+
+<div class="risk-grid">
+  <div class="risk-card lv1">
+    <span class="rk-time">0–5 min · 安全期</span>
+    <h5>外围搜刮</h5>
+    <p>地图外圈低风险破坏搜刮，积累基础元素资源与普通战利品；遭遇少量弱 AI，适合稳健起步。</p>
+  </div>
+  <div class="risk-card lv2">
+    <span class="rk-time">5–10 min · 收缩期</span>
+    <h5>毒雾推进</h5>
+    <p>边缘毒雾开始收缩，安全区缩小；高价值区域（电子机房 / 金属保险库）开放，玩家相遇概率上升。</p>
+  </div>
+  <div class="risk-card lv3">
+    <span class="rk-time">10–14 min · 高压期</span>
+    <h5>精英与空投</h5>
+    <p>AI 精英 Boss 刷新、稀有空投降临中心，必出史诗 / 传说战利品；撤离点陆续激活，团战频发。</p>
+  </div>
+  <div class="risk-card lv4">
+    <span class="rk-time">14–18 min · 终局</span>
+    <h5>最后撤离窗口</h5>
+    <p>仅剩 1 个撤离点开放且读条时间翻倍，毒雾逼至核心；不撤离即淘汰，逼出终极抢点对决。</p>
+  </div>
+</div>
+</section>
+
+<!-- 撤离点状态机 -->
+<section id="extraction" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">04 / Extraction Point</span>
+<h2 class="section-title">撤离点<span class="g">状态机</span></h2>
+<p class="section-desc">地图分布多个撤离点，随时间轮换激活状态。撤离需站桩读条，读条期间<strong style="color:#fff">暴露身位且可被打断</strong>，制造「最后一公里」的紧张博弈。</p>
+
+<div class="ext-point">
+  <div class="epc ok">
+    <div class="ep-dot">🟢</div>
+    <h5>已激活 · 可撤离</h5>
+    <p>站点读条 8 秒即可撤离，受击 / 离开范围中断，需队友架枪护点。</p>
+  </div>
+  <div class="epc warn">
+    <div class="ep-dot">🟡</div>
+    <h5>待激活 · 倒计时</h5>
+    <p>显示激活倒计时，提前蹲守占位，但易成为他队伏击的钓鱼点。</p>
+  </div>
+  <div class="epc hot">
+    <div class="ep-dot">🔴</div>
+    <h5>热点 · 终极点</h5>
+    <p>终局唯一开放点，读条时间翻倍、全图可见信标，必有抢点死斗。</p>
+  </div>
+</div>
+
+<div class="grid g2" style="margin-top:32px">
+  <div class="card">
+    <h3>🏃 读条中断机制</h3>
+    <p>受击或离开撤离范围均中断读条计时，逼出「一定要护点」的强队友协作需求，提高策略深度。</p>
+  </div>
+  <div class="card">
+    <h3>🗺️ 多点轮换逻辑</h3>
+    <p>初期多点同时激活降低冲突，中后期逐步收缩为 2→1 个激活点，将玩家漏斗式引导至最终交战区。</p>
+  </div>
+</div>
+</section>
+
+<!-- 战利品与库存养成 -->
+<section id="loot" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">05 / Loot &amp; Stash</span>
+<h2 class="section-title">战利品与<span class="g">库存养成</span></h2>
+<p class="section-desc">撤离玩法承接四元素资源体系，战利品按稀有度分级——<strong style="color:#fff">带出即永久入库</strong>，用于跨局养成（解锁皮肤 / 强化基础属性 / 兑换稀有海克斯种子），形成「局外成长」的长线钩子。</p>
+
+<div class="loot-tiers">
+  <div class="loot-tier t-c">
+    <span class="lt-q">普通</span>
+    <h5>基础元素料</h5>
+    <p>软质 / 木质碎料，外围搜刮高频产出，用于日常兑换与基础合成。</p>
+  </div>
+  <div class="loot-tier t-r">
+    <span class="lt-q">稀有</span>
+    <h5>金属 / 电子件</h5>
+    <p>高价值区掉落，可强化局外基础属性或合成进阶装备图纸。</p>
+  </div>
+  <div class="loot-tier t-e">
+    <span class="lt-q">史诗</span>
+    <h5>能量核心</h5>
+    <p>精英 Boss 与空投专属，兑换稀有皮肤 / 角色解锁碎片。</p>
+  </div>
+  <div class="loot-tier t-l">
+    <span class="lt-q">传说</span>
+    <h5>奇迹海克斯种子</h5>
+    <p>极稀有带出物，可在主模式中预埋一枚专属海克斯流派起手。</p>
+  </div>
+</div>
+
+<div class="grid g3" style="margin-top:28px">
+  <div class="card">
+    <h3>🌿 软质·有机</h3>
+    <p>植物 / 食物 / 纸。外围大量分布，破坏快感强，适合早期快速积累资源。</p>
+  </div>
+  <div class="card">
+    <h3>🪵 木质·结构</h3>
+    <p>积木 / 木料 / 文具。中层价值，破坏产生块状碎屑，提供建材类养成素材。</p>
+  </div>
+  <div class="card">
+    <h3>⚙️ 金属·硬质</h3>
+    <p>铁件 / 工具 / 硬币。需更多火力破坏，产出硬通货，中后期高价值目标。</p>
+  </div>
+  <div class="card">
+    <h3>💡 能量·电子</h3>
+    <p>电池 / 芯片 / LED。破坏触发连锁爆炸特效，稀有高价值，是终局争夺核心。</p>
+  </div>
+</div>
+</section>
+
+<!-- 核心张力 -->
+<section id="tension" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">06 / Core Tension</span>
+<h2 class="section-title">核心<span class="g">张力设计</span></h2>
+<p class="section-desc">体素撤离玩法的灵魂在于持续制造「贪 or 走」的决策压力——这条张力贯穿局内每一分钟。</p>
+
+<div class="wow">
+  <h3>撤离玩法<span class="g">核心张力</span></h3>
+  <p class="st">贪一波，还是见好就撤？</p>
+  <div class="flow">
+    <div class="fstep">
+      <div class="n">1</div>
+      <h4>破坏搜刮</h4>
+      <p>射击破坏即采集，越搜越富</p>
+    </div>
+    <div class="fstep">
+      <div class="n">2</div>
+      <h4>风险累积</h4>
+      <p>背包越满，损失越大</p>
+    </div>
+    <div class="fstep">
+      <div class="n">3</div>
+      <h4>抉择时刻</h4>
+      <p>提前撤 or 贪高价值区</p>
+    </div>
+    <div class="fstep">
+      <div class="n">4</div>
+      <h4>撤离成功</h4>
+      <p>带出入库，永久保留</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 设计意图 -->
+<section id="design" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">07 / Design Intent</span>
+<h2 class="section-title">设计<span class="g">意图</span></h2>
+<p class="section-desc">体素撤离玩法作为主玩法的高质量补充，需满足四项核心设计目标。</p>
+
+<div class="intent-grid">
+  <div class="intent-card">
+    <div class="ic-num">01</div>
+    <h4>差异化场景覆盖</h4>
+    <p>覆盖「碎片时间单排」场景——不需要组队、不依赖队友配合，适合随开随玩的休闲游戏定位。</p>
+  </div>
+  <div class="intent-card">
+    <div class="ic-num">02</div>
+    <h4>局外成长钩子</h4>
+    <p>通过永久入库机制构建跨局养成系统，提升留存深度，让每一局都有价值，哪怕主模式没有赢。</p>
+  </div>
+  <div class="intent-card">
+    <div class="ic-num">03</div>
+    <h4>体素破坏最大化</h4>
+    <p>把本作最核心的「破坏爽感」作为搜刮的载体，消除传统撤离玩法翻箱倒柜的枯燥，放大独特差异。</p>
+  </div>
+  <div class="intent-card">
+    <div class="ic-num">04</div>
+    <h4>与主玩法互补</h4>
+    <p>不抢夺主玩法资源，战利品体系独立；稀有战利品可在主模式中兑换权益，形成良性循环。</p>
+  </div>
+</div>
+
+<div class="grid g2" style="margin-top:28px">
+  <div class="card">
+    <h3>⚠️ 待设计议题</h3>
+    <p style="color:var(--text2)">
+      1. 背包容量上限与负重系统设计细节<br>
+      2. AI 巡逻队强度曲线与刷新节奏<br>
+      3. 多人小队内部的战利品分配规则<br>
+      4. 反外挂 / 防滚雪球的局外养成上限设计
+    </p>
+  </div>
+  <div class="card">
+    <h3>🔗 与主玩法联动</h3>
+    <p style="color:var(--text2)">
+      传说战利品「奇迹海克斯种子」→ 主模式预埋专属起手<br>
+      稀有战利品 → 兑换英雄皮肤 / 解锁碎片<br>
+      普通 / 稀有材料 → 强化基础属性（有上限）<br>
+      角色技能框架与主玩法完全共用
+    </p>
+  </div>
+</div>
+</section>
+
+<footer>
+  <div class="flogo">微缩大乱斗 · 体素撤离玩法</div>
+  <p>体素撤离玩法专篇 · 从关卡玩法白皮书 v0.7 独立 · PvEvP 搜打撤 · 局外成长 · 四元素战利品体系</p>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 20) });
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('show') }), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(s => io.observe(s));
+const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+const sections = navLinks.map(a => document.querySelector(a.getAttribute('href')));
+function syncNav() {
+  const y = window.scrollY + 120;
+  let idx = 0;
+  sections.forEach((s, i) => { if (s && s.offsetTop <= y) idx = i });
+  navLinks.forEach((a, i) => a.classList.toggle('active', i === idx));
+}
+window.addEventListener('scroll', syncNav);
+syncNav();
+</script>
+</body>
+</html>

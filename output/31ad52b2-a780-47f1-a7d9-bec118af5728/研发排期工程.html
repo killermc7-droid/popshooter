@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 研发排期工程 v1.0（50 人团队 · 18 个月内容路线图）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a12;--text:#e8e6f0;--text2:rgba(255,255,255,.62);--text3:rgba(255,255,255,.4);--accent:#ff2d55;--accent2:#bf5af2;--accent3:#30d158;--accent4:#ffd60a;--cyan:#00f0ff;--gold:#ffd60a;--grad1:linear-gradient(135deg,#ff2d55,#bf5af2);--grad2:linear-gradient(135deg,#00f0ff,#3b82f6);--grad3:linear-gradient(135deg,#ffd60a,#ff2d55);--grad4:linear-gradient(135deg,#30d158,#34c759);--grad-gold:linear-gradient(135deg,#ffe45e,#ff9f0a);--grad-dark:linear-gradient(170deg,#0a0a12 0%,#1a1035 50%,#0d1117 100%);--radius:20px;--glass:rgba(255,255,255,.04);--glass2:rgba(255,255,255,.07);--border:rgba(255,255,255,.08)}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.3}
+.glow-orb.pink{width:600px;height:600px;background:#ff2d55;top:-200px;right:-100px;animation:orbFloat 22s ease-in-out infinite}
+.glow-orb.violet{width:500px;height:500px;background:#7c3aed;bottom:8%;left:-150px;animation:orbFloat 28s ease-in-out infinite reverse}
+.glow-orb.cyan{width:380px;height:380px;background:#00f0ff;top:50%;right:16%;opacity:.18;animation:orbFloat 34s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(44px,-32px) scale(1.07)}66%{transform:translate(-30px,26px) scale(.94)}}
+@media(prefers-reduced-motion:reduce){.glow-orb{animation:none!important}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 88% 66% at 50% 22%,#000 38%,transparent 100%);mask-image:radial-gradient(ellipse 88% 66% at 50% 22%,#000 38%,transparent 100%)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 110% 80% at 50% -5%,rgba(124,58,237,.12),transparent 55%);box-shadow:inset 0 0 300px 70px rgba(5,5,12,.9)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);background:rgba(10,10,18,.75);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1240px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.nav-logo{font-size:1.15rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.nav-sub{color:var(--text2);font-size:.8rem}
+.nav-links{margin-left:auto;display:flex;gap:10px;list-style:none;flex-wrap:wrap}
+.nav-links a{color:var(--text2);font-size:.82rem;font-weight:500;border:1px solid var(--border);background:var(--glass);padding:6px 13px;border-radius:999px;transition:.2s}
+.nav-links a:hover{color:#fff;border-color:var(--cyan)}
+@media(max-width:880px){.nav-links{display:none}}
+
+/* hero */
+.hero{padding:120px 28px 56px;text-align:center;position:relative;z-index:1}
+.hero .badge{display:inline-block;padding:7px 20px;border-radius:999px;background:rgba(255,45,85,.15);border:1px solid rgba(255,45,85,.3);color:var(--accent);font-size:.76rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-size:clamp(2rem,5.2vw,3.4rem);font-weight:900;line-height:1.14;letter-spacing:-.02em;margin-bottom:18px}
+.hero h1 .g{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .g2{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.02rem;color:var(--text2);max-width:840px;margin:0 auto;line-height:1.9}
+.stat-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.stat{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:18px 28px;min-width:128px}
+.stat .n{font-size:2rem;font-weight:900;background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.stat .l{font-size:.76rem;color:var(--text2);margin-top:6px}
+
+/* sections */
+section{padding:64px 28px;max-width:1240px;margin:0 auto;position:relative;z-index:1;scroll-margin-top:78px}
+.sec-head{margin-bottom:34px}
+.sec-label{display:inline-block;padding:5px 16px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;border:1px solid rgba(255,45,85,.4);color:var(--accent)}
+.sec-label.c{border-color:rgba(0,240,255,.4);color:var(--cyan)}
+.sec-label.g{border-color:rgba(255,214,10,.4);color:var(--gold)}
+.sec-title{font-size:clamp(1.6rem,3.6vw,2.4rem);font-weight:900;line-height:1.2;margin-bottom:12px}
+.sec-title .g{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sec-desc{font-size:1rem;color:var(--text2);max-width:860px;line-height:1.85}
+.divider{width:58px;height:3px;border-radius:2px;background:var(--grad1);margin-bottom:20px}
+
+/* team cards */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:14px}
+.team-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:24px;transition:.3s;position:relative;overflow:hidden}
+.team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.team-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.45)}
+.team-card.t-prod::before{background:var(--grad-gold)}
+.team-card.t-design::before{background:var(--grad1)}
+.team-card.t-eng::before{background:var(--grad2)}
+.team-card.t-art::before{background:linear-gradient(135deg,#bf5af2,#7c3aed)}
+.team-card.t-audio::before{background:var(--grad4)}
+.team-card .tc-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.team-card .tc-en{font-size:.74rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.team-card .tc-num{font-size:2.4rem;font-weight:900;line-height:1}
+.team-card.t-prod .tc-num{color:var(--gold)}
+.team-card.t-design .tc-num{color:var(--accent)}
+.team-card.t-eng .tc-num{color:var(--cyan)}
+.team-card.t-art .tc-num{color:var(--accent2)}
+.team-card.t-audio .tc-num{color:var(--accent3)}
+.team-card h3{font-size:1.12rem;font-weight:800;color:#fff;margin:6px 0 10px}
+.team-card .roles{display:flex;flex-wrap:wrap;gap:6px}
+.team-card .roles span{font-size:11.5px;color:var(--text2);background:var(--glass2);border:1px solid var(--border);padding:3px 9px;border-radius:7px}
+
+/* share bar */
+.share-wrap{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:22px 24px;margin-top:8px}
+.share-wrap h4{font-size:.95rem;color:#fff;margin-bottom:16px;font-weight:800}
+.share-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.share-row .nm{width:128px;flex:0 0 auto;font-size:.84rem;color:var(--text2)}
+.share-row .bar{flex:1;height:14px;border-radius:8px;background:rgba(255,255,255,.05);overflow:hidden}
+.share-row .bar i{display:block;height:100%;border-radius:8px}
+.share-row .v{width:78px;flex:0 0 auto;text-align:right;font-size:.84rem;font-weight:700;color:#fff}
+
+/* roadmap table */
+.rm-wrap{border:1px solid var(--border);border-radius:18px;overflow:hidden;overflow-x:auto;background:var(--glass)}
+table.rm{width:100%;border-collapse:collapse;font-size:13px;min-width:880px}
+table.rm thead th{background:var(--glass2);color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;padding:13px 16px;text-align:left;position:sticky;top:0}
+table.rm td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+table.rm tbody tr:hover{background:rgba(255,255,255,.025)}
+table.rm .mo{font-weight:900;color:#fff;white-space:nowrap;font-size:13.5px}
+table.rm .mo small{display:block;font-size:10.5px;color:var(--text3);font-weight:600;margin-top:2px}
+.yr-band td{background:rgba(191,90,242,.1);color:var(--accent2);font-weight:900;letter-spacing:2px;font-size:12px;text-transform:uppercase;padding:9px 16px}
+.empty{color:var(--text3);font-size:12px;font-style:italic}
+
+/* hero entries in table */
+.he{margin-bottom:9px}
+.he:last-child{margin-bottom:0}
+.he .hn{font-weight:800;color:#fff;font-size:13px}
+.role{display:inline-block;font-size:10px;font-weight:700;padding:1.5px 7px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.role.scout{background:rgba(0,240,255,.13);color:#5fe9ff;border:1px solid rgba(0,240,255,.32)}
+.role.heal{background:rgba(48,209,88,.16);color:#5be584;border:1px solid rgba(48,209,88,.38)}
+.role.fight{background:rgba(255,45,85,.14);color:#ff7a90;border:1px solid rgba(255,45,85,.35)}
+.role.support{background:rgba(191,90,242,.15);color:#d09bf5;border:1px solid rgba(191,90,242,.38)}
+.role.move{background:rgba(255,214,10,.13);color:#ffdf5e;border:1px solid rgba(255,214,10,.32)}
+.he .hd{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.55}
+
+/* level chips */
+.lv{margin-bottom:9px}
+.lv:last-child{margin-bottom:0}
+.lv .ln{font-weight:700;color:#dfe6f0;font-size:12.5px}
+.lv .lt{display:inline-block;font-size:10px;color:var(--cyan);background:rgba(0,240,255,.1);padding:1.5px 8px;border-radius:6px;margin-left:6px}
+.lv .ld{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.5}
+.tag-new{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 7px;border-radius:5px;background:var(--grad4);color:#062b13;margin-left:6px;vertical-align:middle}
+
+/* callout */
+.callout{background:linear-gradient(135deg,rgba(167,139,250,.1),rgba(0,240,255,.06));border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:14px;padding:18px 22px;margin:24px 0;font-size:14px;line-height:1.85}
+.callout.a{border-left-color:var(--gold);background:linear-gradient(135deg,rgba(255,214,10,.08),rgba(255,45,85,.05))}
+.callout.c{border-left-color:var(--cyan);background:linear-gradient(135deg,rgba(0,240,255,.08),rgba(59,130,246,.05))}
+.callout strong{color:#fff}
+
+/* analysis cards */
+.an-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:8px}
+.an-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:24px;transition:.3s}
+.an-card:hover{transform:translateY(-4px);border-color:rgba(0,240,255,.4)}
+.an-card .big{font-size:2rem;font-weight:900;background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px}
+.an-card h4{font-size:1rem;color:#fff;font-weight:800;margin-bottom:8px}
+.an-card p{font-size:.86rem;color:var(--text2);line-height:1.7}
+
+/* phase strip */
+.phase{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+.pcard{flex:1;min-width:230px;border-radius:16px;border:1px solid var(--border);background:var(--glass);padding:22px;position:relative;overflow:hidden}
+.pcard .pn{font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.pcard h4{font-size:1.05rem;color:#fff;margin-bottom:8px}
+.pcard p{font-size:.85rem;color:var(--text2);line-height:1.65}
+.pcard.p1{border-color:rgba(0,240,255,.3)}.pcard.p2{border-color:rgba(191,90,242,.3)}.pcard.p3{border-color:rgba(255,214,10,.3)}.pcard.p4{border-color:rgba(48,209,88,.3)}
+
+footer{text-align:center;padding:56px 28px 44px;border-top:1px solid var(--border);position:relative;z-index:1}
+.flogo{font-size:1.3rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+footer p{color:var(--text3);font-size:.82rem;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="glow-orb pink"></div><div class="glow-orb violet"></div><div class="glow-orb cyan"></div>
+
+<nav class="nav"><div class="nav-inner">
+  <span class="nav-logo">研发排期工程</span>
+  <span class="nav-sub">微缩大乱斗 · 体素破坏休闲英雄射击 MOBA</span>
+  <ul class="nav-links">
+    <li><a href="#team">团队架构</a></li>
+    <li><a href="#roadmap">内容排期</a></li>
+    <li><a href="#capacity">产能匹配</a></li>
+    <li><a href="#phase">阶段节奏</a></li>
+  </ul>
+</div></nav>
+
+<header class="hero">
+  <span class="badge">Production Roadmap · v1.0</span>
+  <h1><span class="g">微缩大乱斗</span> · 研发排期工程<br><span class="g2">50 人团队 × 18 个月内容路线图</span></h1>
+  <p>本文档将「<strong style="color:#fff">50 人研发团队架构</strong>」与「<strong style="color:#fff">2025.1 – 2026.6 内容上线节奏</strong>」对齐成一张可执行的排期工程图：年货式高频更新下，每月一位新英雄、按季推进的关卡玩法系统，以及各职能产能如何匹配这一节奏。</p>
+  <div class="stat-row">
+    <div class="stat"><div class="n">50</div><div class="l">研发团队总人数</div></div>
+    <div class="stat"><div class="n">17</div><div class="l">核心排期月数</div></div>
+    <div class="stat"><div class="n">15</div><div class="l">规划上线英雄</div></div>
+    <div class="stat"><div class="n">12</div><div class="l">关卡 / 玩法系统</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">职能线</div></div>
+  </div>
+</header>
+
+<!-- ============ 01 团队架构 ============ -->
+<section id="team">
+  <div class="sec-head">
+    <span class="sec-label">Chapter 01 · Team Structure</span>
+    <div class="sec-title">一、<span class="g">50 人团队架构</span></div>
+    <div class="divider"></div>
+    <p class="sec-desc">五条职能线协同：以 <strong style="color:#fff">美术 19 人</strong> 支撑高频角色 / 场景 / 特效产出，以 <strong style="color:#fff">工程 17 人</strong> 支撑全平台客户端与 PVP 联机服务，设计、制作、音频精干配置。</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card t-prod">
+      <div class="tc-top"><span class="tc-en">Production</span><span class="tc-num">2</span></div>
+      <h3>制作管理</h3>
+      <div class="roles"><span>制作人 ×1</span><span>PM ×1</span></div>
+    </div>
+    <div class="team-card t-design">
+      <div class="tc-top"><span class="tc-en">Game Design</span><span class="tc-num">10</span></div>
+      <h3>游戏策划</h3>
+      <div class="roles"><span>主策 ×1</span><span>系统 ×2</span><span>战斗 ×3</span><span>关卡 ×3</span><span>社交+卡牌 ×1</span></div>
+    </div>
+    <div class="team-card t-eng">
+      <div class="tc-top"><span class="tc-en">Engineering</span><span class="tc-num">17</span></div>
+      <h3>程序工程</h3>
+      <div class="roles"><span>主程 ×1</span><span>客户端 ×8</span><span>服务器 ×4</span><span>工具链 ×2</span><span>TA ×2</span></div>
+    </div>
+    <div class="team-card t-art">
+      <div class="tc-top"><span class="tc-en">Art &amp; Animation</span><span class="tc-num">19</span></div>
+      <h3>美术与动画</h3>
+      <div class="roles"><span>主美 ×1</span><span>角色原画 ×2</span><span>模型 ×3</span><span>动画 ×4</span><span>特效 ×2</span><span>场景 ×2</span><span>Lighting ×4</span><span>UI ×1</span></div>
+    </div>
+    <div class="team-card t-audio">
+      <div class="tc-top"><span class="tc-en">Audio</span><span class="tc-num">2</span></div>
+      <h3>音频</h3>
+      <div class="roles"><span>音频主管 ×1</span><span>音效师 ×1</span></div>
+    </div>
+  </div>
+
+  <div class="share-wrap">
+    <h4>职能人力占比（共 50 人）</h4>
+    <div class="share-row"><span class="nm">美术与动画</span><div class="bar"><i style="width:38%;background:linear-gradient(90deg,#bf5af2,#7c3aed)"></i></div><span class="v">19 人 · 38%</span></div>
+    <div class="share-row"><span class="nm">程序工程</span><div class="bar"><i style="width:34%;background:linear-gradient(90deg,#00f0ff,#3b82f6)"></i></div><span class="v">17 人 · 34%</span></div>
+    <div class="share-row"><span class="nm">游戏策划</span><div class="bar"><i style="width:20%;background:linear-gradient(90deg,#ff2d55,#bf5af2)"></i></div><span class="v">10 人 · 20%</span></div>
+    <div class="share-row"><span class="nm">制作管理</span><div class="bar"><i style="width:4%;background:linear-gradient(90deg,#ffe45e,#ff9f0a)"></i></div><span class="v">2 人 · 4%</span></div>
+    <div class="share-row"><span class="nm">音频</span><div class="bar"><i style="width:4%;background:linear-gradient(90deg,#30d158,#34c759)"></i></div><span class="v">2 人 · 4%</span></div>
+  </div>
+
+  <div class="callout c"><strong>架构解读：</strong>美术 + 程序合计 <strong>72%</strong> 的人力，直接对应「年货式高频内容」对资产产能与全平台技术稳定性的双重要求。战斗策划 3 人 + 关卡策划 3 人，恰好对应排期中「每月新英雄 + 按季关卡玩法」两条并行产线。</div>
+</section>
+
+<!-- ============ 02 内容排期 ============ -->
+<section id="roadmap">
+  <div class="sec-head">
+    <span class="sec-label c">Chapter 02 · Content Roadmap</span>
+    <div class="sec-title">二、<span class="g">内容上线排期（2025.1 – 2026.6）</span></div>
+    <div class="divider" style="background:var(--grad2)"></div>
+    <p class="sec-desc">以「时间 × 内容量」对齐——<strong style="color:#fff">不展开具体内容，只统计每个版本的产出规模（新角色数 / 新皮肤数 / 新玩法·地图数）</strong>，用于评估各职能人员产能与排期压力。呈现年货式更新节奏：角色高频（月更）、玩法低频（季更）。</p>
+  </div>
+
+  <div class="rm-wrap">
+    <table class="rm">
+      <thead><tr><th style="width:120px">时间</th><th style="width:14%">新角色</th><th style="width:14%">新皮肤</th><th style="width:18%">新玩法 / 地图</th><th>当期内容量小结</th></tr></thead>
+      <tbody>
+        <tr class="yr-band"><td colspan="5">2025 年</td></tr>
+        <tr>
+          <td class="mo">1 月<small>首发月</small></td>
+          <td><b>3</b></td><td><b>6</b></td><td><b>5</b></td>
+          <td>首发铺底：3 角色 + 6 套首发皮肤 + 5 大基础玩法（新手房 / 遗迹 / 迷宫 / 无尽 / UGC），全年产能峰值。</td>
+        </tr>
+        <tr><td class="mo">2 月</td><td class="empty">—</td><td><b>2</b></td><td class="empty">—</td><td>首发后稳定周，仅配套商业化皮肤。</td></tr>
+        <tr><td class="mo">3 月</td><td><b>1</b></td><td><b>2</b></td><td class="empty">—</td><td>恢复月更：1 角色 + 配套皮肤。</td></tr>
+        <tr><td class="mo">4 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 玩法（多队 PVP）。</td></tr>
+        <tr><td class="mo">5 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 新系统（家园养成）。</td></tr>
+        <tr><td class="mo">6 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 地图（新增高难入口）。</td></tr>
+        <tr><td class="mo">7 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 玩法（多人 PVP）。</td></tr>
+        <tr><td class="mo">8 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 新系统（卡牌玩法）。</td></tr>
+        <tr><td class="mo">9 月</td><td class="empty">—</td><td><b>2</b></td><td><b>1</b></td><td>玩法系统月：1 大玩法（1v4 半对称对抗）。</td></tr>
+        <tr><td class="mo">10 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 玩法（古级怪物 / 生命塔）。</td></tr>
+        <tr><td class="mo">11 月</td><td><b>1</b></td><td><b>2</b></td><td class="empty">—</td><td>1 角色 + 配套皮肤。</td></tr>
+        <tr><td class="mo">12 月</td><td><b>1</b></td><td><b>3</b></td><td><b>1</b></td><td>年末大版本：1 角色 + 1 大迷宫（六队入场）+ 节日皮肤。</td></tr>
+
+        <tr class="yr-band"><td colspan="5">2026 年</td></tr>
+        <tr><td class="mo">1 月</td><td class="empty">—</td><td><b>2</b></td><td><b>1</b></td><td>迷宫深度内容拓展 + 配套皮肤。</td></tr>
+        <tr><td class="mo">2 月</td><td><b>1</b></td><td><b>2</b></td><td class="empty">—</td><td>1 角色 + 配套皮肤。</td></tr>
+        <tr><td class="mo">3 月</td><td class="empty">—</td><td><b>2</b></td><td class="empty">—</td><td>打磨周，仅商业化皮肤。</td></tr>
+        <tr><td class="mo">4 月</td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>1 角色 + 1 玩法（六队 PVP）。</td></tr>
+        <tr><td class="mo">5 月</td><td><b>1</b></td><td><b>2</b></td><td class="empty">—</td><td>1 角色 + 配套皮肤。</td></tr>
+        <tr><td class="mo">6 月<small>第 18 月</small></td><td><b>1</b></td><td><b>2</b></td><td><b>1</b></td><td>18 个月收口：1 角色 + 1 赛季玩法（首赛季开启）+ 配套皮肤。</td></tr>
+        <tr><td class="mo">7 – 11 月</td><td class="empty">— 待规划</td><td class="empty">— 待规划</td><td class="empty">— 待规划</td><td>版本运营 / 赛季内容窗口（待规划）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout"><strong>产能评估读法：</strong>18 个月累计规划 <strong>≈16 位新角色</strong>、<strong>≈43 套皮肤</strong>、<strong>≈13 项关卡 / 玩法系统</strong>。节奏呈「角色月更 + 皮肤随版本配套 + 玩法季更」三轨并行——据此倒推人员安排：角色产线（设计→原画→建模→动画）需稳定支撑 ≈1 角色/月，皮肤产线需 ≈2–3 套/月的稳定吞吐，玩法 / 关卡产线按季交付大系统。<strong>本表只反映内容量级以评估人员安排，不展开具体角色 / 玩法设计</strong>（详见对应设计白皮书）。</div>
+</section>
+
+<!-- ============ 03 产能匹配 ============ -->
+<section id="capacity">
+  <div class="sec-head">
+    <span class="sec-label g">Chapter 03 · Capacity Matching</span>
+    <div class="sec-title">三、<span class="g">产能匹配分析</span></div>
+    <div class="divider" style="background:var(--grad-gold)"></div>
+    <p class="sec-desc">把团队架构折算到内容节奏上，验证「50 人是否撑得起年货式月更」，并定位关键瓶颈线。</p>
+  </div>
+
+  <div class="an-grid">
+    <div class="an-card">
+      <div class="big">≈1 / 月</div>
+      <h4>英雄产出节拍</h4>
+      <p>16 位角色分摊在 18 个月内，平均每月一位。对应战斗策划 3 人轮转设计、角色原画 2 + 模型 3 + 动画 4 形成「设计→原画→建模→动画」流水线。</p>
+    </div>
+    <div class="an-card">
+      <div class="big">≈1 / 季</div>
+      <h4>关卡 / 玩法节拍</h4>
+      <p>梦菌（家园）、植物俱乐部（卡牌）、惊魂战法（1v4）等大系统按季推出，由关卡策划 3 + 系统策划 2 + 场景 2 + Lighting 4 承接。</p>
+    </div>
+    <div class="an-card">
+      <div class="big">8 + 4</div>
+      <h4>全平台 + 联机底座</h4>
+      <p>客户端 8 人支撑多端适配与射击手感，服务器 4 人支撑 2v2 / 4v4 / 六队 PVP 的联机与匹配，对应排期中持续扩张的多队对战需求。</p>
+    </div>
+    <div class="an-card">
+      <div class="big">2 + 2</div>
+      <h4>工具链 × TA 杠杆</h4>
+      <p>工具链 2 + TA 2 是「年货式」的关键杠杆：UGC 工坊、关卡编辑、资产规范化管线，决定 19 人美术能否持续高效复用产能。</p>
+    </div>
+  </div>
+
+  <div class="callout a"><strong>瓶颈与风险线：</strong>① <strong>美术 19 人</strong> 是月更英雄 + 季更场景的产能命脉，Lighting 4 人需在多关卡间排队，建议工具链优先建设资产 / 光照预设管线；② <strong>音频仅 2 人</strong>，面对 15 英雄语音 + 12 场景音景偏紧，建议关键节点引入外包；③ 2026.6 起内容窗口待规划，应预留赛季运营与版本迭代缓冲。</div>
+</section>
+
+<!-- ============ 04 阶段节奏 ============ -->
+<section id="phase">
+  <div class="sec-head">
+    <span class="sec-label">Chapter 04 · Milestones</span>
+    <div class="sec-title">四、<span class="g">阶段节奏总览</span></div>
+    <div class="divider"></div>
+    <p class="sec-desc">将 18 个月排期归并为四个工程阶段，便于里程碑管理与资源调度。</p>
+  </div>
+  <div class="phase">
+    <div class="pcard p1">
+      <div class="pn">Phase 1 · 2025 Q1</div>
+      <h4>首发铺底</h4>
+      <p>1 月集中上线 3 英雄 + 5 大基础玩法（新手房 / 遗迹 / 迷宫 / 无尽 / UGC），2 月稳定、3 月恢复月更。</p>
+    </div>
+    <div class="pcard p2">
+      <div class="pn">Phase 2 · 2025 Q2–Q3</div>
+      <h4>双轨高频期</h4>
+      <p>4–8 月英雄月更不断，交替补「PVP 多队 / 家园 / 昆虫郦镇 / 卡牌」玩法，验证年货式产线吞吐。</p>
+    </div>
+    <div class="pcard p3">
+      <div class="pn">Phase 3 · 2025 Q4</div>
+      <h4>玩法扩张 + 大迷宫</h4>
+      <p>9 月惊魂战法（1v4），10–12 月万灵之力与「泰陵龙宫」六队大迷宫收束全年。</p>
+    </div>
+    <div class="pcard p4">
+      <div class="pn">Phase 4 · 2026 H1（至第 18 月）</div>
+      <h4>深耕与扩展</h4>
+      <p>泰陵龙宫深度内容 + 六队 PVP，新角色持续补充；至 6 月（第 18 月）以首赛季玩法收口 18 个月路线图，7 月起进入赛季运营内容窗口（待规划）。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="flogo">微缩大乱斗</div>
+  <p>研发排期工程 · v1.0 · 50 人团队 × 18 个月内容路线图</p>
+  <p>花园战争项目组 · 内部文件 · 请勿外传</p>
+  <p style="font-size:.74rem;color:rgba(255,255,255,.18);margin-top:6px">数据来源：制作周期排期表（内容节奏）+ 团队架构表（人力配置）。部分角色技能细节以原始排期表可辨识信息为准。</p>
+</footer>
+
+</body>
+</html>

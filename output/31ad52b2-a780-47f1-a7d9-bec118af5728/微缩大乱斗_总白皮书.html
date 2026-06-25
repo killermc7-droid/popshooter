@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 项目总白皮书 v1.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a12;--text:#e8e6f0;--text2:rgba(255,255,255,.62);--text3:rgba(255,255,255,.4);--accent:#ff2d55;--accent2:#bf5af2;--accent3:#30d158;--accent4:#ffd60a;--cyan:#00f0ff;--grad1:linear-gradient(135deg,#ff2d55,#bf5af2);--grad2:linear-gradient(135deg,#00f0ff,#bf5af2);--border:rgba(255,255,255,.08);--glass:rgba(255,255,255,.04);--card:#15152a}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.3}
+.orb.p{width:560px;height:560px;background:#ff2d55;top:-180px;right:-80px}
+.orb.v{width:480px;height:480px;background:#7c3aed;bottom:5%;left:-140px}
+.orb.c{width:380px;height:380px;background:#00f0ff;top:46%;right:16%}
+/* 顶部固定导航 */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);background:rgba(10,10,18,.82);border-bottom:1px solid var(--border)}
+.topnav-in{max-width:1240px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{font-size:1.15rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;white-space:nowrap}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:999px;font-size:.82rem;font-weight:700;color:var(--text2);background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .3s;white-space:nowrap;font-family:inherit}
+.tab:hover{color:#fff;border-color:rgba(255,45,85,.4)}
+.tab.active{color:#fff;background:var(--grad1);border-color:transparent;box-shadow:0 4px 18px rgba(255,45,85,.35)}
+@media(max-width:760px){.tab{padding:7px 12px;font-size:.76rem}}
+/* Hero */
+.hero{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:128px 28px 30px;text-align:center}
+.hero .badge{display:inline-block;padding:7px 20px;border-radius:999px;background:rgba(0,240,255,.12);border:1px solid rgba(0,240,255,.3);color:var(--cyan);font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:20px;text-transform:uppercase}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;line-height:1.12;letter-spacing:-.02em;margin-bottom:16px}
+.hero h1 .g{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.05rem;color:var(--text2);max-width:780px;margin:0 auto;line-height:1.9}
+/* 文档卡片总览 */
+.docs{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 28px 20px}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.doc-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px 24px;cursor:pointer;transition:all .35s;position:relative;overflow:hidden;text-align:left}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.doc-card.d1::before{background:var(--grad2)}.doc-card.d2::before{background:var(--grad1)}
+.doc-card.d3::before{background:linear-gradient(90deg,#30d158,#34c759)}.doc-card.d4::before{background:linear-gradient(90deg,#ffd60a,#ff2d55)}
+.doc-card.d5::before{background:linear-gradient(90deg,#bf5af2,#7c3aed)}
+.doc-card:hover{transform:translateY(-5px);border-color:rgba(255,45,85,.3);box-shadow:0 14px 44px rgba(0,0,0,.4)}
+.doc-card .dn{font-size:.68rem;font-weight:800;letter-spacing:1px;color:var(--text3);margin-bottom:10px;text-transform:uppercase}
+.doc-card .di{font-size:1.8rem;margin-bottom:10px}
+.doc-card h3{font-size:1.12rem;font-weight:800;color:#fff;margin-bottom:8px}
+.doc-card p{font-size:.84rem;color:var(--text2);line-height:1.7}
+.doc-card .go{margin-top:14px;font-size:.78rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:6px}
+/* 内嵌文档查看区 */
+.viewer{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:24px 28px 60px}
+.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.viewer-title{font-size:1.3rem;font-weight:900;color:#fff;display:flex;align-items:center;gap:10px}
+.viewer-title .bar{width:6px;height:26px;border-radius:3px;background:var(--grad1)}
+.open-new{font-size:.8rem;font-weight:700;color:var(--cyan);text-decoration:none;padding:8px 18px;border-radius:999px;border:1px solid rgba(0,240,255,.4);background:rgba(0,240,255,.08);transition:all .3s}
+.open-new:hover{background:rgba(0,240,255,.18)}
+.frame-wrap{border:1px solid var(--border);border-radius:18px;overflow:hidden;background:#0a0a12;box-shadow:0 12px 48px rgba(0,0,0,.45)}
+iframe{width:100%;height:80vh;border:0;display:block;background:#0a0a12}
+footer{text-align:center;padding:50px 28px 44px;border-top:1px solid var(--border);position:relative;z-index:1}
+footer .fl{font-size:1.25rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+footer p{color:var(--text3);font-size:.82rem;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="orb p"></div><div class="orb v"></div><div class="orb c"></div>
+
+<nav class="topnav">
+<div class="topnav-in">
+<div class="brand">微缩大乱斗 · 总白皮书</div>
+<div class="tabs">
+<button class="tab active" data-doc="0">📖 总览</button>
+<button class="tab" data-doc="1">🌌 世界观</button>
+<button class="tab" data-doc="2">🎯 3C 战斗</button>
+<button class="tab" data-doc="3">🗺️ 关卡玩法</button>
+<button class="tab" data-doc="4">📈 市场可行性</button>
+<button class="tab" data-doc="5">🛠️ 研发排期</button>
+</div>
+</div>
+</nav>
+
+<!-- ===== 总览视图 ===== -->
+<div id="overview">
+<header class="hero">
+<span class="badge">Project Master Whitepaper · v1.0</span>
+<h1>微缩大乱斗 · <span class="g">项目总白皮书</span></h1>
+<p>一个治愈系微缩世界的休闲英雄射击大乱斗。本总白皮书将<strong style="color:#fff">世界观设定、3C 战斗、关卡玩法、市场可行性、研发排期</strong>五份核心文档聚合于一处，点击下方卡片或顶部标签，即可在同一页面内完整查阅各分册。</p>
+</header>
+
+<section class="docs">
+<div class="docs-grid">
+<div class="doc-card d1" data-doc="1">
+<div class="dn">Doc 01 · Worldview</div>
+<div class="di">🌌</div>
+<h3>世界观设定</h3>
+<p>「调律者」近未来设定——负面情绪在「亚相层」沉积为「晦能」污染城市，调律者以净化对抗，奠定角色与美术的叙事根基。</p>
+<div class="go">进入查看 →</div>
+</div>
+<div class="doc-card d2" data-doc="2">
+<div class="dn">Doc 02 · Combat 3C</div>
+<div class="di">🎯</div>
+<h3>3C 战斗白皮书</h3>
+<p>越肩近景 TPS · 1 角色 1 枪 · 弹道即技能 · 强档辅助瞄准（非硬锁）。确立角色 / 相机 / 操控三大基石与技能模板池。</p>
+<div class="go">进入查看 →</div>
+</div>
+<div class="doc-card d3" data-doc="3">
+<div class="dn">Doc 03 · Level & Gameplay</div>
+<div class="di">🗺️</div>
+<h3>关卡玩法白皮书</h3>
+<p>体素破坏 · 战斗即采集 · 海克斯无限构筑 · 单塔三命 · 15 分钟一局。含四元素材质、英雄原型库、体素撤离与核心循环。</p>
+<div class="go">进入查看 →</div>
+</div>
+<div class="doc-card d4" data-doc="4">
+<div class="dn">Doc 04 · Market Feasibility</div>
+<div class="di">📈</div>
+<h3>市场可行性分析</h3>
+<p>以《超自然行动组》《花园战争》等竞品为镜，论证「卡通 Q 版多人休闲」赛道的市场需求、天花板与长线运营生命线。</p>
+<div class="go">进入查看 →</div>
+</div>
+<div class="doc-card d5" data-doc="5">
+<div class="dn">Doc 05 · Dev Roadmap</div>
+<div class="di">🛠️</div>
+<h3>研发排期工程</h3>
+<p>50 人团队 × 18 个月内容路线图——团队架构、内容上线排期（角色 / 皮肤 / 玩法量级）、产能匹配与阶段里程碑。</p>
+<div class="go">进入查看 →</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="fl">微缩大乱斗</div>
+<p>项目总白皮书 v1.0 · 聚合：世界观设定 / 3C 战斗白皮书 / 关卡玩法白皮书 / 市场可行性分析 / 研发排期工程<br>点击卡片或顶部标签切换分册查看</p>
+</footer>
+</div>
+
+<!-- ===== 单文档查看视图 ===== -->
+<div id="viewer-view" style="display:none">
+<div class="viewer">
+<div class="viewer-head">
+<div class="viewer-title"><span class="bar"></span><span id="vTitle">文档</span></div>
+<a class="open-new" id="vOpen" href="#" target="_blank" rel="noopener">↗ 新窗口打开原文档</a>
+</div>
+<div class="frame-wrap">
+<iframe id="vFrame" src="" loading="lazy" title="文档查看"></iframe>
+</div>
+</div>
+<footer>
+<div class="fl">微缩大乱斗</div>
+<p>项目总白皮书 v1.0 · 当前为内嵌分册视图，点击顶部「📖 总览」返回</p>
+</footer>
+</div>
+
+<script>
+const DOCS=[
+  null,
+  {title:'🌌 世界观设定文档',file:'世界观.html'},
+  {title:'🎯 3C 战斗白皮书',file:'3C战斗白皮书.html'},
+  {title:'🗺️ 关卡玩法白皮书',file:'关卡玩法白皮书.html'},
+  {title:'📈 市场可行性分析报告',file:'休闲射击_市场可行性分析.html'},
+  {title:'🛠️ 研发排期工程',file:'研发排期工程.html'}
+];
+const overview=document.getElementById('overview');
+const viewerView=document.getElementById('viewer-view');
+const vFrame=document.getElementById('vFrame');
+const vTitle=document.getElementById('vTitle');
+const vOpen=document.getElementById('vOpen');
+const tabs=Array.from(document.querySelectorAll('.tab'));
+function show(idx){
+  tabs.forEach(t=>t.classList.toggle('active',+t.dataset.doc===idx));
+  if(idx===0){
+    overview.style.display='';viewerView.style.display='none';
+    vFrame.src='';
+  }else{
+    const d=DOCS[idx];
+    overview.style.display='none';viewerView.style.display='';
+    vTitle.textContent=d.title;
+    vOpen.href=encodeURI(d.file);
+    if(vFrame.getAttribute('data-cur')!==String(idx)){
+      vFrame.src=encodeURI(d.file);
+      vFrame.setAttribute('data-cur',idx);
+    }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(t=>t.addEventListener('click',()=>show(+t.dataset.doc)));
+document.querySelectorAll('.doc-card').forEach(c=>c.addEventListener('click',()=>show(+c.dataset.doc)));
+show(0);
+</script>
+</body>
+</html>

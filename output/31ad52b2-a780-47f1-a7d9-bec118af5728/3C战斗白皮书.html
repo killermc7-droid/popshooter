@@ -1,0 +1,406 @@
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 3C 战斗白皮书 v0.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a12;--text:#e8e6f0;--text2:rgba(255,255,255,.62);--text3:rgba(255,255,255,.4);--accent:#ff2d55;--accent2:#bf5af2;--accent3:#30d158;--accent4:#ffd60a;--cyan:#00f0ff;--grad1:linear-gradient(135deg,#ff2d55,#bf5af2);--grad2:linear-gradient(135deg,#00f0ff,#bf5af2);--grad3:linear-gradient(135deg,#ffd60a,#ff2d55);--grad-dark:linear-gradient(170deg,#0a0a12 0%,#1a1035 50%,#0d1117 100%);--radius:20px;--glass:rgba(255,255,255,.04);--border:rgba(255,255,255,.08)}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;overflow-x:hidden}
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.32}
+.glow-orb.pink{width:600px;height:600px;background:#ff2d55;top:-200px;right:-100px;animation:orbFloat 20s ease-in-out infinite}
+.glow-orb.violet{width:500px;height:500px;background:#7c3aed;bottom:10%;left:-150px;animation:orbFloat 26s ease-in-out infinite reverse}
+.glow-orb.cyan{width:400px;height:400px;background:#00f0ff;top:50%;right:18%;animation:orbFloat 32s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(46px,-34px) scale(1.08)}66%{transform:translate(-32px,28px) scale(.94)}}
+@media(prefers-reduced-motion:reduce){.glow-orb{animation:none!important}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 88% 66% at 50% 28%,#000 38%,transparent 100%);mask-image:radial-gradient(ellipse 88% 66% at 50% 28%,#000 38%,transparent 100%)}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 110% 80% at 50% -5%,rgba(124,58,237,.12),transparent 55%);box-shadow:inset 0 0 300px 70px rgba(5,5,12,.9)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(24px);background:rgba(10,10,18,.75);border-bottom:1px solid var(--border)}
+.nav.scrolled{box-shadow:0 2px 32px rgba(255,45,85,.15)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:1.2rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.nav-links{display:flex;gap:14px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.84rem;font-weight:500;transition:color .3s;position:relative;padding-bottom:4px}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--grad1)}
+@media(max-width:980px){.nav-links{display:none}}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 32px 80px;position:relative;overflow:hidden;background:linear-gradient(170deg,rgba(10,10,18,.78) 0%,rgba(26,16,53,.6) 45%,rgba(13,17,23,.9) 100%),url('rich.png') center/cover no-repeat;background-blend-mode:normal}
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 70% 55% at 50% 62%,rgba(10,10,18,.55),transparent 70%)}
+.hero-content{position:relative;z-index:2;max-width:920px}
+.hero-badge{display:inline-block;padding:8px 22px;border-radius:999px;background:rgba(255,45,85,.15);border:1px solid rgba(255,45,85,.3);color:var(--accent);font-size:.8rem;font-weight:700;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase}
+.hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:900;line-height:1.1;margin-bottom:22px;letter-spacing:-.03em}
+.hero h1 .hl{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .sub{display:block;font-size:clamp(1rem,2.5vw,1.45rem);font-weight:400;color:var(--text2);margin-top:14px;letter-spacing:.05em}
+.hero p{font-size:1.12rem;color:var(--text2);max-width:720px;margin:0 auto 36px;line-height:1.9}
+.hero-tags{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-tags span{padding:8px 20px;border-radius:999px;font-size:.82rem;font-weight:600;border:1px solid var(--border);background:var(--glass);color:var(--text2)}
+.hero-tags span:nth-child(1){border-color:rgba(255,45,85,.4);color:var(--accent)}
+.hero-tags span:nth-child(2){border-color:rgba(191,90,242,.4);color:var(--accent2)}
+.hero-tags span:nth-child(3){border-color:rgba(48,209,88,.4);color:var(--accent3)}
+.hero-tags span:nth-child(4){border-color:rgba(255,214,10,.4);color:var(--accent4)}
+.hero-tags span:nth-child(5){border-color:rgba(0,240,255,.4);color:var(--cyan)}
+section{padding:88px 32px;max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.reveal.show{opacity:1;transform:none}
+.section-divider{width:60px;height:3px;border-radius:2px;background:var(--grad1);margin-bottom:22px}
+.section-label{display:inline-block;padding:6px 18px;border-radius:999px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;border:1px solid rgba(255,45,85,.4);color:var(--accent)}
+.section-title{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:900;margin-bottom:14px;line-height:1.2}
+.section-title .g{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{font-size:1.04rem;color:var(--text2);max-width:820px;margin-bottom:40px;line-height:1.9}
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:30px;transition:all .4s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,45,85,.3);box-shadow:0 8px 40px rgba(255,45,85,.1)}
+.card .ic{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;background:rgba(255,255,255,.06);border:1px solid var(--border)}
+.card h3{font-size:1.12rem;font-weight:800;margin-bottom:10px;color:#fff}
+.card p{font-size:.92rem;color:var(--text2);line-height:1.75}
+.card ul{list-style:none;margin-top:10px}
+.card ul li{font-size:.9rem;color:var(--text2);padding:5px 0 5px 18px;position:relative;line-height:1.6}
+.card ul li::before{content:'';position:absolute;left:0;top:13px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.decide{display:grid;grid-template-columns:1fr auto 1fr;border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-top:8px}
+.decide .col{padding:24px}
+.decide .no{background:rgba(255,45,85,.06)}
+.decide .yes{background:rgba(48,209,88,.06)}
+.decide .vs{display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--text3);padding:0 12px;background:rgba(255,255,255,.02)}
+.decide h4{display:flex;align-items:center;gap:8px;font-size:1rem}
+.decide .no h4{color:#ff6b81}.decide .yes h4{color:#5fe08a}
+.decide p{font-size:.88rem;color:var(--text2);margin-top:8px}
+@media(max-width:720px){.decide{grid-template-columns:1fr}.decide .vs{padding:8px}}
+.tmpl{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0}
+.slot{flex:1;min-width:200px;border-radius:16px;padding:22px;border:1px solid var(--border);background:var(--glass);position:relative;overflow:hidden}
+.slot .lbl{font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.slot h4{font-size:1.05rem;color:#fff;margin-bottom:6px}
+.slot p{font-size:.86rem;color:var(--text2)}
+.slot.a{border-color:rgba(0,240,255,.3)}.slot.b{border-color:rgba(191,90,242,.3)}.slot.c{border-color:rgba(255,214,10,.3)}
+.slot .num{position:absolute;top:14px;right:18px;font-size:1.6rem;font-weight:900;opacity:.18}
+.flow{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap;margin-top:8px}
+.fstep{flex:1;min-width:240px;border-radius:16px;border:1px solid var(--border);background:var(--glass);padding:24px}
+.fstep .n{width:30px;height:30px;border-radius:50%;background:var(--grad1);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.9rem;margin-bottom:12px}
+.fstep h4{color:#fff;font-size:1.02rem;margin-bottom:8px}
+.fstep p{font-size:.88rem;color:var(--text2)}
+.wow{background:linear-gradient(170deg,#1a0520 0%,#0d0d1a 100%);border-radius:var(--radius);border:1px solid rgba(255,45,85,.2);padding:44px 38px;margin:36px 0;position:relative;overflow:hidden}
+.wow::before{content:'';position:absolute;top:-100px;right:-100px;width:380px;height:380px;background:radial-gradient(circle,rgba(255,45,85,.2),transparent 70%);pointer-events:none}
+.wow h3{font-size:clamp(1.4rem,3.2vw,2rem);font-weight:900;text-align:center;margin-bottom:10px;color:#fff;position:relative;z-index:1}
+.wow h3 .g{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.wow .st{text-align:center;color:var(--cyan);font-weight:600;margin-bottom:30px;position:relative;z-index:1}
+.ref{border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.ref .row{display:grid;grid-template-columns:200px 1fr;border-bottom:1px solid var(--border)}
+.ref .row:last-child{border-bottom:none}
+.ref .k{padding:16px 20px;font-weight:700;color:#fff;background:rgba(255,255,255,.03);font-size:.92rem}
+.ref .v{padding:16px 20px;color:var(--text2);font-size:.9rem}
+@media(max-width:620px){.ref .row{grid-template-columns:1fr}.ref .k{background:rgba(255,255,255,.05)}}
+.lead{font-size:1.02rem;color:var(--text);background:rgba(255,255,255,.03);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0}
+.tbl{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-top:8px;font-size:.92rem}
+.tbl th{background:rgba(255,255,255,.05);color:#fff;font-weight:700;text-align:left;padding:14px 18px;border-bottom:1px solid var(--border)}
+.tbl td{padding:13px 18px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td strong{color:#fff}
+.tbl .key{color:#fff;font-weight:700;white-space:nowrap}
+@media(max-width:680px){.tbl,.tbl tbody,.tbl tr,.tbl td,.tbl th{display:block}.tbl th{display:none}.tbl td{border-bottom:none;padding:6px 16px}.tbl tr{border-bottom:1px solid var(--border);padding:10px 0}}
+.pill{display:inline-block;padding:3px 11px;border-radius:999px;font-size:.74rem;font-weight:700;margin:2px}
+.pill.y{background:rgba(48,209,88,.14);color:#5fe08a;border:1px solid rgba(48,209,88,.3)}
+.pill.n{background:rgba(255,45,85,.12);color:#ff6b81;border:1px solid rgba(255,45,85,.3)}
+.pill.w{background:rgba(255,214,10,.12);color:var(--accent4);border:1px solid rgba(255,214,10,.3)}
+.pool{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.ptag{padding:9px 18px;border-radius:12px;font-size:.9rem;font-weight:600;border:1px solid var(--border);background:var(--glass);color:var(--text)}
+.pool.ballist .ptag{border-color:rgba(0,240,255,.32);color:#9fe9ff}
+.pool.dash .ptag{border-color:rgba(191,90,242,.32);color:#dcb6ff}
+.note{font-size:.82rem;color:var(--text3);margin-top:14px}
+.cklist{list-style:none;margin-top:8px}
+.cklist li{display:flex;gap:12px;align-items:flex-start;padding:13px 18px;border:1px solid var(--border);border-radius:14px;background:var(--glass);margin-bottom:10px;font-size:.92rem;color:var(--text2)}
+.cklist li .box{flex-shrink:0;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;margin-top:1px}
+.cklist li.done .box{background:rgba(48,209,88,.18);color:#5fe08a;border:1px solid rgba(48,209,88,.4)}
+.cklist li.todo .box{background:rgba(255,214,10,.14);color:var(--accent4);border:1px solid rgba(255,214,10,.4)}
+.cklist li strong{color:#fff}
+footer{text-align:center;padding:60px 32px 50px;border-top:1px solid var(--border);position:relative;z-index:1}
+.flogo{font-size:1.4rem;font-weight:900;background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+footer p{color:var(--text3);font-size:.84rem}
+</style>
+</head>
+<body>
+<div class="glow-orb pink"></div>
+<div class="glow-orb violet"></div>
+<div class="glow-orb cyan"></div>
+
+<nav class="nav" id="nav">
+<div class="nav-inner">
+<div class="nav-logo">3C 战斗白皮书</div>
+<ul class="nav-links">
+<li><a href="#character">角色</a></li>
+<li><a href="#camera">相机</a></li>
+<li><a href="#control">操控</a></li>
+<li><a href="#hitbox">命中判定</a></li>
+<li><a href="#skill">技能池</a></li>
+<li><a href="#ref">参考标杆</a></li>
+<li><a href="#open">待澄清</a></li>
+</ul>
+</div>
+</nav>
+
+<header class="hero">
+<div class="hero-content">
+<span class="hero-badge">3C Combat Whitepaper · draft-4 / v0.1</span>
+<h1><span class="hl">微缩大乱斗</span> 3C 战斗白皮书
+<span class="sub">越肩近景 TPS · 1 角色 1 枪 · 弹道即技能 · 强档辅助瞄准</span></h1>
+<p>枪是<strong style="color:#fff">技能释放器</strong>，不是真实枪械射击模拟器。角色（Character）、相机（Camera）、操控（Control）三大基石，叠加命中判定与技能模板池——角色差异化在中后期由 <strong style="color:#fff">基础战斗 + 技能 + 海克斯技能</strong> 三层承接。</p>
+<div class="hero-tags">
+<span>越肩近景 TPS</span>
+<span>全员远程</span>
+<span>1 角色 1 枪</span>
+<span>弹道即技能</span>
+<span>强档辅助瞄准 · 非硬锁</span>
+</div>
+</div>
+</header>
+
+<!-- 0 核心定调 -->
+<section id="core" class="reveal" style="padding-bottom:20px">
+<div class="section-divider"></div>
+<span class="section-label">00 / Core Pitch</span>
+<h2 class="section-title">核心<span class="g">定调</span></h2>
+<div class="lead"><strong style="color:#fff">越肩近景 TPS + 全员远程 + 1 角色 1 枪 + 弹道即技能 + 强档辅助瞄准（非硬锁）</strong>——枪是技能释放器，不是真实枪械射击模拟器；角色差异化在中后期由 <strong style="color:#fff">基础战斗 + 技能 + 海克斯技能</strong> 三层承接。</div>
+<div class="grid g3" style="margin-top:8px">
+<div class="card"><h3>手感不焦虑</h3><p>强档辅助瞄准消除微操焦虑，移动端 / 手柄 / 键鼠都友好——一键开火即可打出技能级反馈。</p></div>
+<div class="card"><h3>枪即技能</h3><p>弹道形态就是技能形态。一把枪首发就要做出"小生态"，给后续技能 / 海克斯留接入点。</p></div>
+<div class="card"><h3>三层成长</h3><p>不靠换枪堆深度，靠基础战斗 + 技能 + 海克斯技能三层加深一把枪的玩法。</p></div>
+</h2></div><video src="演示视频1.mov" controls playsinline preload="metadata" style="display:block;width:100%;height:auto;background:#000"></video></div></h2>
+</div>
+</section>
+
+<!-- 1 角色 -->
+<section id="character" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">01 / Character</span>
+<h2 class="section-title">角色 ·<span class="g">1 角色 1 枪</span></h2>
+<figure style="margin:8px 0 26px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#000">
+<figcaption style="padding:12px 18px;font-size:.84rem;color:var(--text3);text-align:center;border-top:1px solid var(--border);background:var(--glass)">▲ 角色玩法演示 · 1 角色 1 枪 / 弹道即技能</figcaption>
+</figure>
+<p class="section-desc">1 角色 = 1 把专属枪，强绑定、不做换枪系统。全员远程，首批不出近战。武器是技能型枪械——弹道形态即技能形态。角色屏占比偏大，强调辨识度与卡通可爱。</p>
+<table class="tbl">
+<thead><tr><th style="width:170px">维度</th><th>决策</th></tr></thead>
+<tbody>
+<tr><td class="key">角色 ↔ 武器</td><td><strong>1 角色 = 1 把专属枪</strong>，强绑定，不做换枪系统</td></tr>
+<tr><td class="key">首批角色数量</td><td><strong>8 个</strong>，分别走不同的"弹道 + 位移"正交组合，保证开局阵容差异化</td></tr>
+<tr><td class="key">攻击方式</td><td><strong>全员远程</strong>，首批不出近战</td></tr>
+<tr><td class="key">武器定位</td><td><strong>技能型枪械</strong>：弹道形态 = 技能形态（直射 / 散射 / 追踪 / 抛物 / 范围 / 穿透 / 弹射 / 充能 …）</td></tr>
+<tr><td class="key">角色体型</td><td>参考《超自然行动组》——角色在屏幕中<strong>占比偏大</strong>，强调辨识度与卡通可爱</td></tr>
+<tr><td class="key">中长期规划</td><td><strong>基础战斗 + 技能 + 海克斯技能</strong> 三层承接成长 / 多样性（不靠换枪，靠这三层加深一把枪的玩法）</td></tr>
+</tbody>
+</table>
+<div class="grid g2" style="margin-top:24px">
+<div class="card"><h3>隐含要求 · 每把枪首发就要有"小生态"</h3><p>既然不能换枪，每把枪首发就要做出基础弹道 + 至少 <strong style="color:#fff">1 个有辨识度的特性</strong>（穿透 / 弹射 / 充能 / 蓄力分裂 …），给后续 <strong style="color:#fff">技能 / 海克斯技能</strong> 留接入点。</p></div>
+<div class="card"><h3>隐含要求 · 海克斯最小框架要尽早</h3><p>海克斯技能（局内随机或局外养成获取的强化）要尽早出<strong style="color:#fff">最小可玩框架</strong>，否则"1 角色 1 枪"长期会被骂内容薄。</p></div>
+</div>
+</section>
+
+<!-- 2 相机 -->
+<section id="camera" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">02 / Camera</span>
+<h2 class="section-title">相机 ·<span class="g">越肩近景 TPS</span></h2>
+<p class="section-desc">第三人称越肩 TPS，近景、轻微俯角、跟随带缓动。初稿不做精确开镜、不做半瞄拉近反馈、不做肩切换（固定右肩默认）。</p>
+<table class="tbl">
+<thead><tr><th style="width:170px">维度</th><th>决策</th></tr></thead>
+<tbody>
+<tr><td class="key">视角类型</td><td><strong>第三人称越肩 TPS</strong>（角色靠下偏左 / 右，镜头从角色后上方略低俯角看出去）</td></tr>
+<tr><td class="key">镜头距离</td><td><strong>近景</strong>——角色占屏高约 1/3 ~ 1/2，肩膀以上清晰可见</td></tr>
+<tr><td class="key">俯角</td><td>轻微俯角（不是平视、也不是俯视）</td></tr>
+<tr><td class="key">跟随</td><td>跟随主角带轻量缓动；移动时镜头略滞后，转向有阻尼</td></tr>
+<tr><td class="key">开镜 / 拉近</td><td><strong>不做精确开镜</strong>；初稿阶段也<strong>不做半瞄拉近反馈</strong>（待后期手感打磨时再评估）</td></tr>
+<tr><td class="key">肩切换</td><td><strong>初稿不做</strong>，固定一个肩位（建议右肩默认）</td></tr>
+</tbody>
+</table>
+<h3 style="font-size:1.2rem;color:#fff;margin:26px 0 6px">对关卡 / UI 的隐含要求</h3>
+<div class="grid g3">
+<div class="card"><h3>用纵深做战术</h3><p>利用<strong style="color:#fff">前后纵深</strong>做战术层次（前排小怪 + 后排远程 + 掩体），而不是平面圆环刷怪。</p></div>
+<div class="card"><h3>UI 让出中央</h3><p>UI 不遮挡角色和准星附近区域；血条、技能、弹药贴四角，<strong style="color:#fff">中央交给战斗</strong>。</p></div>
+<div class="card"><h3>避免硬贴墙构图</h3><p>不做肩切换 → 关卡要<strong style="color:#fff">避免硬贴墙强制切肩</strong>的构图，否则会出现"看不见敌人"的体验事故。</p></div>
+</div>
+<div class="grid g2" style="margin-top:18px">
+<figure style="margin:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--glass)">
+<img src="chaoziran.png" alt="《超自然行动组》越肩近景关卡与 UI 参考：UI 贴四角、中央留给战斗、利用纵深布敌" style="display:block;width:100%;height:auto">
+</div><img src="植物.png" alt="关卡纵深与掩体布局参考：前排近战 + 后排远程 + 可用掩体，避免平面圆环刷怪" style="display:block;width:100%;height:auto"></div>
+<figcaption style="padding:12px 18px;font-size:.84rem;color:var(--text3);text-align:center;border-top:1px solid var(--border)">▲ 视角 / UI 参考 ·《超自然行动组》——越肩近景、UI 让出中央、用前后纵深做战术层次</figcaption>
+</figure>
+</div>
+
+<h3 style="font-size:1.2rem;color:#fff;margin:26px 0 6px">角色模型方向 · 3.5 头身比大头比</h3>
+<p style="color:var(--text2);margin-bottom:8px">采用 <strong style="color:#fff">3.5 头身比</strong>的 Q 版大头身形（参考：扎双辫、戴蓝色兔耳帽、抱着烤面包机的小女孩——卡通可爱、手办质感、强辨识度）。这个比例不是单纯美术取向，而是<strong style="color:#fff">直接服务于"容易射中 + 容易爆头"的射击手感</strong>。</p>
+<figure style="margin:18px 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--glass)">
+<img src="企业微信截图_5f7c7f88-2e41-4700-8d58-768bf685c0eb.png" alt="3.5 头身比参考角色三视图：扎双辫、戴蓝色兔耳帽、抱烤面包机的小女孩" style="display:block;width:100%;height:auto">
+<figcaption style="padding:12px 18px;font-size:.84rem;color:var(--text3);text-align:center;border-top:1px solid var(--border)">▲ 角色比例参考 · 3.5 头身比大头身形（前 / 侧 / 背 三视图）——大头 + 短粗身形即"天然大命中盒"</figcaption>
+</figure>
+<div class="wow">
+<p class="st">大头 = 大命中盒 → 把"爆头"从精瞄门槛变成人人可享的高频爽点</p>
+<div class="grid g3">
+<div class="card"><h3>容易爆头</h3><p>头部在三段式命中盒里<strong style="color:#fff">占比天然偏大</strong>，配合强档辅助瞄准（落点身体中心 + 准星吸附），爆头从"必须精瞄"变成<strong style="color:#fff">高频正反馈</strong>。</p></div>
+<div class="card"><h3>容易射中</h3><p>短粗敦实的身形<strong style="color:#fff">目标面积大</strong>、轮廓饱满，显著降低脱靶率，呼应"不要求精确瞄准"的核心定调。</p></div>
+<div class="card"><h3>辨识度 / 传播</h3><p>越肩近景下大头身比角色在屏幕里更醒目，表情与装备清晰，<strong style="color:#fff">卡通可爱、利于社交截图传播</strong>。</p></div>
+</div>
+</div>
+<div class="lead">🔗 <strong style="color:#fff">与 §4 命中判定协调</strong>：3.5 头身比放大了头部命中盒，让爆头"<strong style="color:#fff">容易发生</strong>"；但部位伤害差距仍<strong style="color:#fff">留窄</strong>（头 ×1.2 / 身 ×1.0 / 腿 ×0.8）。即——大头是为了"人人都能轻松打出爆头的爽感与反馈（<strong style="color:#fff">独立 VFX / SFX 已拍板</strong>）"，<strong style="color:#fff">而不是"逼玩家精瞄才有输出"</strong>。"容易爆头"承担爽感反馈，不破坏低操作焦虑的手感方向。</div>
+</section>
+
+<!-- 3 操控 -->
+<section id="control" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">03 / Control</span>
+<h2 class="section-title">操控 ·<span class="g">强档辅助瞄准</span></h2>
+<p class="section-desc">移动 + 开火 + 1~2 技能键的极简输入预算。跳跃是所有角色基础动作；二段跳与冲刺 / 翻滚 / 闪现等保命位移则作为角色技能差异化。辅助瞄准开到强档，但绝不硬锁。</p>
+<table class="tbl">
+<thead><tr><th style="width:160px">维度</th><th>决策</th></tr></thead>
+<tbody>
+<tr><td class="key">移动</td><td>摇杆 / WASD 八方向</td></tr>
+<tr><td class="key">跳跃</td><td><strong>所有角色基础动作</strong>（普攻级能力，不进技能槽）</td></tr>
+<tr><td class="key">二段跳</td><td><strong>特殊技能，不是基础能力</strong>——谁有由角色决定</td></tr>
+<tr><td class="key">射击</td><td>一键开火，<strong>不需要精确瞄准</strong></td></tr>
+<tr><td class="key">辅助瞄准</td><td><strong>强档</strong>：子弹弯曲 + 准星吸附 + 索敌权重全开，但<strong>仍不做硬锁定</strong>（朝向由玩家给）</td></tr>
+<tr><td class="key">半瞄键</td><td><strong>初稿不做</strong>（拉近 / 准星更稳 / 索敌权重提高等反馈暂缓，后期再评估）</td></tr>
+<tr><td class="key">保命位移</td><td><strong>作为角色技能差异化</strong>：冲刺 / 翻滚 / 闪现 / 钩锁 / 隐身位移 …，不同角色不同</td></tr>
+<tr><td class="key">技能槽</td><td>枪 = 主输出；预留 <strong>1~2 个独立技能键</strong>（位移技能为主，<strong>不设大招键</strong>）</td></tr>
+<tr><td class="key">输入预算</td><td>移动 + 开火 + 1~2 技能键，移动端 / 手柄 / 键鼠都友好</td></tr>
+</tbody>
+</table>
+
+<div class="wow">
+<h3>辅助瞄准的<span class="g">边界</span></h3>
+<p class="st">强档只消除微操焦虑，不替玩家决定打谁——朝向永远由玩家控制</p>
+<div class="decide">
+<div class="col yes"><h4>✓ 强档要做</h4>
+<p style="margin-top:10px"><span class="pill y">YES</span> 子弹微微弯向目标（强档幅度可见）</p>
+<p><span class="pill y">YES</span> 准星接近敌人时吸附（吸附半径较大）</p>
+</div>
+<div class="vs">VS</div>
+<div class="col no"><h4>✕ 坚决不做</h4>
+<p style="margin-top:10px"><span class="pill n">NO</span> 自动锁头 / 锁敌后 100% 命中</p>
+<p><span class="pill n">NO</span> 玩家完全不用瞄方向</p>
+</div>
+</div>
+<p style="color:var(--text2);font-size:.9rem;margin-top:18px;position:relative;z-index:1">📐 内部参数（吸附半径 / 子弹弯曲角度 / 索敌优先级权重）需做成<strong style="color:#fff">可调</strong>，便于不同枪型差异化（如狙击型可削弱吸附以保留打中爽感）。</p>
+</div>
+
+<figure style="margin:18px 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--glass)">
+<video src="战斗2.mov" controls playsinline preload="metadata" style="display:block;width:100%;height:auto;background:#000"></video>
+<figcaption style="padding:12px 18px;font-size:.84rem;color:var(--text3);text-align:center;border-top:1px solid var(--border)">▲ 操控 / 辅助瞄准实机演示 · 强档辅助瞄准下的开火与位移手感</figcaption>
+</figure>
+
+<h3 style="font-size:1.2rem;color:#fff;margin:8px 0 6px">跳跃 / 二段跳的设计含义</h3>
+<div class="grid g3">
+<div class="card"><h3>跳跃通用</h3><p>关卡可默认所有角色都能跨小台阶，地形复杂度可适度往上加。</p></div>
+<div class="card"><h3>二段跳 = 特权</h3><p>垂直空间是少数角色的特权，关卡要有"<strong style="color:#fff">二段跳能上、其他人绕路</strong>"的可选路径设计。</p></div>
+<div class="card"><h3>可达性标签</h3><p>关卡编辑器需要"<strong style="color:#fff">是否需要二段跳</strong>"的可达性标签，避免"某角色卡关"。</p></div>
+</div>
+<div class="lead">🎮 <strong style="color:#fff">跳跃手感基线 → 参考《Splatoon 喷射战士》</strong>：单跳高度、滞空时间、落地硬直按 Splatoon 的轻盈灵动手感定基线（跳跃干脆、滞空可控、落地几乎无硬直），与"低操作焦虑 + 卡通爽快"的整体方向一致。后续调参以此为锚点。</div>
+</section>
+
+<!-- 4 命中判定 -->
+<section id="hitbox" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">04 / Hitbox</span>
+<h2 class="section-title">命中判定 ·<span class="g">三段式</span></h2>
+<p class="section-desc">受击碰撞体三段式：头 / 身体 / 腿，不做更细拆分。各部位伤害差距不大——避免"必须爆头才有输出"，配合强档辅助瞄准与不要求精确瞄准，保持手感顺滑、降低操作焦虑。</p>
+
+<div class="tmpl">
+<div class="slot a"><span class="num">×1.2</span><div class="lbl">Head</div><h4>头</h4><p>独立 VFX / SFX + 小额加成，主要承担<strong style="color:#fff">爽感反馈</strong>而非数值差异。</p></div>
+<div class="slot b"><span class="num">×1.0</span><div class="lbl">Body · 基准</div><h4>身体</h4><p>基准伤害。子弹弯曲落点统一打到身体中心。</p></div>
+<div class="slot c"><span class="num">×0.8</span><div class="lbl">Legs</div><h4>腿</h4><p>差距仍留窄，不构成精瞄向手感压力。</p></div>
+</div>
+
+<div class="grid g2" style="margin-top:8px">
+<div class="card"><h3>三段式是数值上限</h3><p>美术 / 动画做角色时<strong style="color:#fff">不需要为更精细的命中盒预留骨骼</strong>，省工时。差距不大意味着部位伤害更多承担<strong style="color:#fff">反馈差异</strong>而非数值差异。</p></div>
+<div class="card"><h3>落点统一身体中心</h3><p>子弹弯曲（强档辅助瞄准）目标点统一打到身体中心，<strong style="color:#fff">不为"瞄哪个部位"做策略选择</strong>——这与三段式低差距配套。</p></div>
+</div>
+<div class="lead" style="margin-top:24px">⚠️ 后期若加"弱点机制"（如某些 BOSS 有红色弱点部位），属于<strong style="color:#fff">怪物专属</strong>逻辑，不污染玩家角色的三段式规则。</div>
+
+<h3 style="font-size:1.2rem;color:#fff;margin:26px 0 6px">待定参数 · 给程序 / 数值的接口契约</h3>
+<table class="tbl">
+<thead><tr><th>参数</th><th>建议值 / 说明</th></tr></thead>
+<tbody>
+<tr><td class="key">部位伤害倍率</td><td>身体 = <strong>1.0</strong> 基准，头 <strong>1.2</strong>，腿 <strong>0.8</strong>（差距留窄，反馈差异为主）</td></tr>
+<tr><td class="key">爆头反馈</td><td><strong style="color:#fff">给独立 VFX / SFX</strong>（已拍板）——数值差不大，但爆头爽感拉满</td></tr>
+<tr><td class="key">子弹弯曲落点</td><td>统一目标，默认<strong>身体中心</strong></td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- 5 技能模板池 -->
+<section id="skill" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">05 / Skill Pool</span>
+<h2 class="section-title">角色技能<span class="g">模板池</span></h2>
+<p class="section-desc">每个角色 = 1 弹道技能 + 1 位移技能，组合即角色个性。<strong style="color:#fff">不做大招</strong>——所有角色只有技能，没有单独的终极爆发键。弹道池决定枪型差异，位移池决定手感差异，两池正交组合，少量条目就能撑出多角色。</p>
+<div class="tmpl">
+<div class="slot a"><span class="num">1</span><div class="lbl">弹道技能</div><h4>枪型差异</h4><p>决定这把枪"打出去什么形态"。</p></div>
+<div class="slot b"><span class="num">2</span><div class="lbl">位移技能</div><h4>手感差异</h4><p>决定这个角色"怎么动 / 怎么保命"。</p></div>
+</div>
+
+<div class="grid g2" style="margin-top:8px">
+<div class="card"><h3>弹道技能池 · 枪型差异</h3>
+<div class="pool ballist">
+<span class="ptag">直射</span><span class="ptag">散射</span><span class="ptag">追踪</span><span class="ptag">抛物</span><span class="ptag">范围</span><span class="ptag">穿透</span><span class="ptag">弹射</span><span class="ptag">充能</span><span class="ptag">蓄力分裂</span>
+</div>
+</div>
+<div class="card"><h3>位移技能池 · 手感差异</h3>
+<div class="pool dash">
+<span class="ptag">冲刺</span><span class="ptag">翻滚</span><span class="ptag">闪现</span><span class="ptag">二段跳</span><span class="ptag">钩锁</span><span class="ptag">隐身位移</span>
+</div>
+</div>
+</div>
+<div class="lead" style="margin-top:24px">🧩 <strong style="color:#fff">正交组合法则</strong>：弹道池是枪型差异、位移池是手感差异。两池正交相乘——例如「穿透 × 钩锁」「散射 × 闪现」「追踪 × 隐身位移」——<strong style="color:#fff">首批 8 个角色</strong>即可用少量条目撑出截然不同的玩法，直接支撑高频内容产能。</div>
+</section>
+
+<!-- 6 参考标杆 -->
+<section id="ref" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">06 / Benchmark</span>
+<h2 class="section-title">参考<span class="g">标杆</span></h2>
+<p class="section-desc">明确"抄什么 / 不抄什么"，把参考精准锚定在视角、屏占比、关卡构图与弹道手感上，避开精确瞄准 / 开镜射击与负重生存等不相关系统。</p>
+<div class="grid g3">
+<div class="card"><h3>🏡 和睦小镇保卫战</h3>
+<p style="margin-bottom:6px"><span class="pill y">抄</span> 越肩近景视角、角色屏占比、卡通色调、纵深关卡构图、UI 布局（左下血条 + 右下技能）</p>
+<p><span class="pill n">不抄</span> PvP / 守点玩法节奏（不是 v0.1 重点）</p></div>
+<div class="card"><h3>🦑 Splatoon（喷射战士）</h3>
+<p style="margin-bottom:6px"><span class="pill y">抄</span> 高饱和卡通色彩、强辨识度的武器形态差异（不同枪 = 不同玩法）、低门槛爽快射击手感</p>
+<p><span class="pill n">不抄</span> 墨水涂地 / 变鱿鱼潜行机制、PvP 占领对战模式</p></div>
+<div class="card"><h3>📺 瑞奇与叮当</h3>
+<p style="margin-bottom:6px"><span class="pill y">抄</span> 技能弹道手感、释放反馈</p>
+<p><span class="pill n">不抄</span> 任何精确瞄准 / 开镜射击的部分</p></div>
+</div>
+</section>
+
+<!-- 7 待澄清清单 -->
+<section id="open" class="reveal">
+<div class="section-divider"></div>
+<span class="section-label">07 / Open Issues</span>
+<h2 class="section-title">待澄清<span class="g">清单</span></h2>
+<p class="section-desc">其余核心项均已拍板并写入对应章节（角色 / 相机 / 操控 / 命中判定 / 技能池）。当前<strong style="color:#fff">唯一待定项</strong>如下。</p>
+<ul class="cklist">
+<li class="todo"><span class="box">?</span><div><strong>海克斯技能系统最小框架</strong>何时并行启动？（强烈建议与第 2 个角色同步开工，<strong style="color:#fff">框架细节待定</strong>）</div></li>
+</ul>
+<div class="wow" style="margin-top:36px">
+<h3>一句话<span class="g">回写</span></h3>
+<p style="color:var(--text);font-size:1.04rem;line-height:1.95;position:relative;z-index:1;text-align:center;max-width:880px;margin:0 auto">大乱斗角色 3C 初稿方向：<strong style="color:#fff">越肩近景 TPS + 全员远程 + 1 角色 1 枪 + 弹道即技能 + 强档辅助瞄准（非硬锁）+ 不做肩切换</strong>。<strong style="color:#fff">首批 8 个角色</strong>，每个角色只有"1 弹道 + 1 位移"技能、<strong style="color:#fff">不做大招</strong>。所有角色默认带跳跃（手感基线参考 <strong style="color:#fff">Splatoon</strong>），二段跳和冲刺 / 翻滚 / 闪现等位移作为角色技能差异化。受击碰撞体三段式（头 <strong style="color:#fff">1.2</strong> / 身体 <strong>1.0</strong> / 腿 <strong>0.8</strong>），数值差距留窄但<strong style="color:#fff">爆头给独立 VFX / SFX</strong>，爽感拉满又不逼精瞄。视角参考《和睦小镇》，体型 3.5 头身比、轻俯角、近景。换枪不做，深度交给后续<strong style="color:#fff">基础战斗 + 技能 + 海克斯技能</strong>三层（海克斯最小框架启动节点待定）。</p>
+</div>
+</section>
+
+<footer>
+<div class="flogo">微缩大乱斗</div>
+<p>3C 战斗白皮书 v0.1（draft-4）· 整合角色 / 相机 / 操控 / 命中判定 / 技能模板池 / 参考标杆 / 待澄清清单</p>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>20)});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(s=>io.observe(s));
+const navLinks=Array.from(document.querySelectorAll('.nav-links a'));
+const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href')));
+function syncNav(){const y=window.scrollY+120;let idx=0;sections.forEach((s,i)=>{if(s&&s.offsetTop<=y)idx=i});navLinks.forEach((a,i)=>a.classList.toggle('active',i===idx))}
+window.addEventListener('scroll',syncNav,{passive:true});
+window.addEventListener('resize',syncNav);
+syncNav();
+</script>
+</body>
+</html>
