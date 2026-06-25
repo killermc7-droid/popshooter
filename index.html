@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>微缩大乱斗 · 设计文档</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0d12;
+  --surface:#14141f;
+  --border:rgba(255,255,255,.08);
+  --text1:#fff;
+  --text2:rgba(255,255,255,.65);
+  --text3:rgba(255,255,255,.35);
+  --grad1:linear-gradient(135deg,#00f0ff,#b060ff);
+  --grad2:linear-gradient(135deg,#ff6b6b,#ff9f43);
+}
+body{background:var(--bg);color:var(--text1);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+
+.hero{text-align:center;margin-bottom:60px}
+.badge{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,240,255,.8);border:1px solid rgba(0,240,255,.25);border-radius:20px;padding:4px 14px;margin-bottom:20px}
+.title{font-size:clamp(2rem,6vw,3.6rem);font-weight:900;line-height:1.1;margin-bottom:16px}
+.title span{background:var(--grad1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:1rem;color:var(--text2);line-height:1.7;max-width:480px;margin:0 auto}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;width:100%;max-width:780px}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px 28px;
+  text-decoration:none;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s;
+  background:radial-gradient(ellipse at 30% 40%,rgba(0,240,255,.06),transparent 70%);
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(0,240,255,.3);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.card:hover::before{opacity:1}
+.card.c2:hover{border-color:rgba(176,96,255,.35);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.card.c2::before{background:radial-gradient(ellipse at 30% 40%,rgba(176,96,255,.06),transparent 70%)}
+
+.card-icon{font-size:2.2rem;line-height:1}
+.card-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,240,255,.7)}
+.card.c2 .card-label{color:rgba(176,96,255,.8)}
+.card-title{font-size:1.4rem;font-weight:800;color:#fff}
+.card-desc{font-size:.88rem;color:var(--text2);line-height:1.65}
+.card-arrow{margin-top:auto;padding-top:16px;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;color:rgba(0,240,255,.8)}
+.card.c2 .card-arrow{color:rgba(176,96,255,.9)}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.tag{font-size:.7rem;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text3)}
+
+.footer{margin-top:56px;font-size:.78rem;color:var(--text3);text-align:center}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">Game Design Document</div>
+  <h1 class="title">微缩大乱斗<br><span>设计白皮书</span></h1>
+  <p class="subtitle">体素破坏 × 英雄射击 × 休闲社交<br>轻度内容型多人在线游戏 · 设计文档在线阅读</p>
+</div>
+
+<div class="cards">
+  <a class="card c1" href="关卡玩法白皮书.html">
+    <div class="card-icon">🗺️</div>
+    <div class="card-label">Level Design</div>
+    <div class="card-title">关卡玩法白皮书</div>
+    <div class="card-desc">玩法框架 · 资源采集 · 成长体验 · 地图拓扑 · 可破坏物体系统 · 防御塔三阶 · 节奏时间轴 · 劣势补偿 · 优势终结</div>
+    <div class="card-tags">
+      <span class="tag">资源采集</span>
+      <span class="tag">地图拓扑</span>
+      <span class="tag">对局模式</span>
+      <span class="tag">节奏设计</span>
+    </div>
+    <div class="card-arrow">阅读文档 →</div>
+  </a>
+
+  <a class="card c2" href="3C战斗白皮书.html">
+    <div class="card-icon">⚔️</div>
+    <div class="card-label">Combat Design</div>
+    <div class="card-title">3C 战斗白皮书</div>
+    <div class="card-desc">角色 · 相机 · 操控 · 命中判定 · 技能模板池 · 英雄原型库 · 战斗手感参数 · 参考标杆 · 美术方向</div>
+    <div class="card-tags">
+      <span class="tag">角色设计</span>
+      <span class="tag">战斗手感</span>
+      <span class="tag">技能池</span>
+      <span class="tag">美术参考</span>
+    </div>
+    <div class="card-arrow">阅读文档 →</div>
+  </a>
+</div>
+
+<div class="footer">微缩大乱斗 · 内部设计文档 · v0.7</div>
+
+</body>
+</html>
